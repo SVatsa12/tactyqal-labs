@@ -2,8 +2,9 @@ import type { Metadata, Viewport } from "next";
 import { Bricolage_Grotesque, Geist } from "next/font/google";
 import { site } from "@/content/site";
 import { Toaster } from "@/components/ui/toaster";
+import { FadeUpObserver } from "@/components/ui/fade-up-observer";
 import "./globals.css";
-import { SITE_URL } from "@/lib/site-url";
+import { SITE_URL } from "@/lib/urls";
 
 const bricolage = Bricolage_Grotesque({
   subsets: ["latin"],
@@ -40,7 +41,17 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${bricolage.variable} ${geist.variable}`}>
+    <html lang="en" className={`${bricolage.variable} ${geist.variable}`} suppressHydrationWarning>
+      <head>
+        {/* Enables FadeUp's hidden start state only when JS runs; if the observer has not
+            started within 3s (slow or failed JS), the hidden state is dropped so nothing stays invisible. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "document.documentElement.classList.add('js');setTimeout(function(){if(!window.__fadeReady)document.documentElement.classList.remove('js')},3000)",
+          }}
+        />
+      </head>
       <body>
         <span id="top" />
         <a
@@ -51,6 +62,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         </a>
         {children}
         <Toaster />
+        <FadeUpObserver />
       </body>
     </html>
   );

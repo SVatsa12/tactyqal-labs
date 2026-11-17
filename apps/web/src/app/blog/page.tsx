@@ -65,7 +65,7 @@ export default async function BlogIndexPage({ searchParams }: { searchParams: SP
       {/* Header */}
       <section aria-labelledby="blog-index-title" className="border-b border-border">
         <div className="container-page pb-14 pt-14 md:pb-20 md:pt-20">
-          <FadeUp>
+          <FadeUp immediate>
             <p className="text-sm font-semibold uppercase tracking-[0.14em] text-brand-ink">{t.eyebrow}</p>
             <h1 id="blog-index-title" className="text-h1 mt-4 max-w-3xl">
               {t.title}
@@ -73,7 +73,7 @@ export default async function BlogIndexPage({ searchParams }: { searchParams: SP
             <p className="mt-5 max-w-2xl text-lg leading-relaxed text-muted">{t.description}</p>
           </FadeUp>
 
-          <FadeUp delay={0.05}>
+          <FadeUp immediate delay={0.05}>
             <form action="/blog" method="get" role="search" className="mt-9 flex max-w-xl gap-2">
               {category ? <input type="hidden" name="category" value={category} /> : null}
               <label htmlFor="blog-search" className="sr-only">
@@ -103,7 +103,7 @@ export default async function BlogIndexPage({ searchParams }: { searchParams: SP
           </FadeUp>
 
           {visibleCategories.length > 0 ? (
-            <FadeUp delay={0.1}>
+            <FadeUp immediate delay={0.1}>
               <nav aria-label={t.categoriesLabel} className="mt-7">
                 <ul className="flex flex-wrap gap-2">
                   <li>

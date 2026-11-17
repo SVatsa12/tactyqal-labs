@@ -46,8 +46,12 @@ export function sanitizeContent(html: string): string {
 /** Plain text from HTML (for excerpts / reading time). */
 export function htmlToText(html: string): string {
   // Space out block boundaries first, so "<h2>Hi</h2><p>There</p>" reads "Hi There", not "HiThere".
-  const spaced = html.replace(/<\/(?:p|h[1-6]|li|div|blockquote|figcaption|pre|td|th|tr)>|<br\s*\/?>/gi, "$& ");
-  return sanitizeHtml(spaced, { allowedTags: [], allowedAttributes: {} })
+  return stripTags(html.replace(/<\/(?:p|h[1-6]|li|div|blockquote|figcaption|pre|td|th|tr)>|<br\s*\/?>/gi, "$& "));
+}
+
+/** Tags removed and entities decoded, with no block spacing (exported for the one-off recompute script). */
+export function stripTags(html: string): string {
+  return sanitizeHtml(html, { allowedTags: [], allowedAttributes: {} })
     .replace(/&nbsp;/g, " ")
     .replace(/&amp;/g, "&")
     .replace(/&#8217;|&rsquo;/g, "’")

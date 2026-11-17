@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { getAllPublishedPosts } from "@/lib/api";
-import { SITE_URL } from "@/lib/site-url";
+import { SITE_URL } from "@/lib/urls";
 
 export const revalidate = 3600;
 

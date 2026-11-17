@@ -1,6 +1,6 @@
 import { ArrowRight, MessageCircle } from "lucide-react";
 import { site } from "@/content/site";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { AccordionItem } from "@/components/ui/accordion";
 import { FadeUp } from "@/components/ui/fade-up";
 import { SectionHeading } from "@/components/ui/section-heading";
 
@@ -31,14 +31,13 @@ export function Faq() {
         </div>
 
         <FadeUp>
-          <Accordion type="single" collapsible defaultValue="item-0" className="space-y-3">
+          <div className="space-y-3">
             {faq.items.map((item, i) => (
-              <AccordionItem key={item.question} value={`item-${i}`}>
-                <AccordionTrigger>{item.question}</AccordionTrigger>
-                <AccordionContent>{item.answer}</AccordionContent>
+              <AccordionItem key={item.question} name="faq" question={item.question} open={i === 0}>
+                {item.answer}
               </AccordionItem>
             ))}
-          </Accordion>
+          </div>
         </FadeUp>
       </div>
     </section>

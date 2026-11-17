@@ -13,7 +13,8 @@
     "db:seed": "tsx --env-file=.env src/scripts/seed.ts",
     "import:wp": "tsx --env-file=.env src/scripts/import-wordpress.ts",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "content:recompute": "tsx --env-file=.env src/scripts/recompute-content.ts"
   },
   "dependencies": {
     "@prisma/client": "6",

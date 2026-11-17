@@ -6,9 +6,7 @@ import { toast } from "sonner";
 import { site } from "@/content/site";
 import { Button } from "@/components/ui/button";
 import { Field, inputCls, textareaCls } from "@/components/ui/field";
-import { fieldErrors, leadSchema, submitLead, type LeadErrors, type LeadField } from "@/lib/lead";
-
-const FIELD_ORDER: LeadField[] = ["name", "email", "phone", "message"];
+import { LEAD_FIELDS, submitLead, validateLead, type LeadErrors, type LeadField } from "@/lib/lead";
 
 export function ContactForm() {
   const t = site.contact.form;
@@ -20,7 +18,7 @@ export function ContactForm() {
   React.useEffect(() => setHydrated(true), []);
 
   const focusFirstError = (errs: LeadErrors) => {
-    const first = FIELD_ORDER.find((f) => errs[f]);
+    const first = LEAD_FIELDS.find((f) => errs[f]);
     if (first) formRef.current?.querySelector<HTMLElement>(`[name="${first}"]`)?.focus();
   };
 
@@ -28,11 +26,10 @@ export function ContactForm() {
     event.preventDefault();
     const form = event.currentTarget;
     const data = Object.fromEntries(new FormData(form));
-    const parsed = leadSchema.safeParse(data);
-    if (!parsed.success) {
-      const errs = fieldErrors(parsed.error);
-      setErrors(errs);
-      focusFirstError(errs);
+    const parsed = validateLead(data);
+    if (!parsed.ok) {
+      setErrors(parsed.errors);
+      focusFirstError(parsed.errors);
       return;
     }
 

@@ -1,7 +1,4 @@
-"use client";
-
-import * as React from "react";
-import { motion, useReducedMotion } from "motion/react";
+import type * as React from "react";
 
 type FadeUpProps = {
   children: React.ReactNode;
@@ -9,27 +6,24 @@ type FadeUpProps = {
   /** Seconds. Use small steps (0.05–0.1) to stagger siblings. */
   delay?: number;
   as?: "div" | "li" | "article" | "section";
+  /** Above the fold: animate with CSS on first paint instead of waiting for the observer. */
+  immediate?: boolean;
 };
 
-/** The one entrance animation: fade + rise 16px, once, 0.5s. */
-export function FadeUp({ children, className, delay = 0, as = "div" }: FadeUpProps) {
-  const reduce = useReducedMotion();
-  const Comp = motion[as];
-
-  if (reduce) {
-    const Static = as;
-    return <Static className={className}>{children}</Static>;
-  }
-
+/**
+ * The one entrance animation: fade + rise 16px, once, 0.5s.
+ * Server-rendered and visible by default. Only when JavaScript runs (html.js, set by an inline
+ * script in the layout) does CSS hide it until FadeUpObserver marks it as in view, so content is
+ * never invisible without JS. prefers-reduced-motion skips the effect entirely (globals.css).
+ */
+export function FadeUp({ children, className, delay = 0, as: Tag = "div", immediate = false }: FadeUpProps) {
   return (
-    <Comp
+    <Tag
+      {...(immediate ? { "data-fade-now": "" } : { "data-fade": "" })}
       className={className}
-      initial={{ opacity: 0, y: 16 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "0px 0px -10% 0px" }}
-      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay }}
+      style={delay ? ({ "--fade-delay": `${delay}s` } as React.CSSProperties) : undefined}
     >
       {children}
-    </Comp>
+    </Tag>
   );
 }

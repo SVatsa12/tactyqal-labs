@@ -43,22 +43,24 @@ export function FinalCta() {
               <p className="mt-2 max-w-md text-[0.9375rem] text-on-ink-muted">{contact.detailsDescription}</p>
               <dl className="mt-6 grid gap-5 sm:grid-cols-2">
                 {contact.details.map((d) => (
-                  <div key={d.label} className="flex items-center gap-3.5">
-                    <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-white/10 text-accent">
-                      <Icon name={d.icon} className="size-[1.125rem]" />
-                    </span>
-                    <div className="min-w-0">
-                      <dt className="text-sm text-on-ink-muted">{d.label}</dt>
-                      <dd className="truncate font-medium">
-                        {d.href ? (
-                          <a href={d.href} className="underline-offset-4 hover:underline">
-                            {d.value}
-                          </a>
-                        ) : (
-                          d.value
-                        )}
-                      </dd>
-                    </div>
+                  // <dl> may only hold <div>s of <dt>/<dd>: the icon sits inside the <dt>, positioned
+                  // into a left column so the layout stays the same.
+                  <div key={d.label} className="relative flex min-h-10 min-w-0 flex-col justify-center pl-[3.375rem]">
+                    <dt className="text-sm text-on-ink-muted">
+                      <span className="absolute left-0 top-1/2 grid size-10 -translate-y-1/2 place-items-center rounded-xl bg-white/10 text-accent">
+                        <Icon name={d.icon} className="size-[1.125rem]" />
+                      </span>
+                      {d.label}
+                    </dt>
+                    <dd className="truncate font-medium">
+                      {d.href ? (
+                        <a href={d.href} className="underline-offset-4 hover:underline">
+                          {d.value}
+                        </a>
+                      ) : (
+                        d.value
+                      )}
+                    </dd>
                   </div>
                 ))}
               </dl>

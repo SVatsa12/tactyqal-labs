@@ -84,6 +84,28 @@ export const site = {
       "1:1 mentoring that takes your teen from idea to a full-stack app in 8 weeks, with no coding. 100+ students mentored, top university admissions, grants and media coverage.",
   },
 
+  notFound: {
+    eyebrow: "404",
+    title: "This page took a different path",
+    body: "The page you're looking for doesn't exist or has moved.",
+    home: { label: "Back to home", href: "/" } satisfies Link,
+    blog: { label: "Read the blog", href: "/blog" } satisfies Link,
+  },
+
+  errorPage: {
+    eyebrow: "Something went wrong",
+    title: "We couldn't load this page",
+    body: "Please try again. If it keeps happening, email us and we'll sort it out.",
+    retry: "Try again",
+    home: { label: "Back to home", href: "/" } satisfies Link,
+  },
+
+  ogImage: {
+    alt: "Tactyqal Labs: your teen builds a real app in 8 weeks",
+    headline: "Empower your kid to build the next app that impacts millions, in 8 weeks",
+    tagline: "1:1 mentoring for teens · 100+ students mentored",
+  },
+
   a11y: {
     skipToContent: "Skip to content",
     openMenu: "Open menu",

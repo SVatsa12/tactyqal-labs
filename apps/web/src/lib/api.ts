@@ -1,5 +1,6 @@
 import "server-only";
 import { z } from "zod";
+import { API_URL } from "@/lib/urls";
 
 /**
  * Public client for the blog API (apps/api). Server-side only; no auth.
@@ -7,7 +8,7 @@ import { z } from "zod";
  * replies with something unexpected, so pages can render a graceful fallback.
  */
 
-export const API_URL = (process.env.API_URL ?? "http://localhost:4000").replace(/\/$/, "");
+export { API_URL };
 
 const term = z.object({ id: z.string(), name: z.string(), slug: z.string() });
 
