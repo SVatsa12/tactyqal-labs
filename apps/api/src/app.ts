@@ -10,6 +10,7 @@ import { openApiSpec } from "./lib/openapi.js";
 import { prisma } from "./lib/prisma.js";
 import { errorHandler, notFoundHandler } from "./middleware/error-handler.js";
 import { authRouter } from "./routes/auth.js";
+import { leadsRouter } from "./routes/leads.js";
 import { postsRouter } from "./routes/posts.js";
 import { termsRouter } from "./routes/terms.js";
 
@@ -69,6 +70,7 @@ export function createApp() {
   v1.use("/posts", postsRouter);
   v1.use("/categories", termsRouter("category"));
   v1.use("/tags", termsRouter("tag"));
+  v1.use("/leads", leadsRouter);
   app.use("/api/v1", v1);
 
   app.get("/", (_req, res) => res.redirect("/api/docs"));

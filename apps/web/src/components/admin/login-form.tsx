@@ -3,7 +3,7 @@
 import { useActionState } from "react";
 import { loginAction, type FormState } from "@/app/admin/actions";
 import { Button } from "@/components/ui/button";
-import { Field, inputCls } from "./field";
+import { Field, inputCls } from "@/components/ui/field";
 
 export function LoginForm({ next, expired }: { next?: string; expired: boolean }) {
   const [state, action, pending] = useActionState<FormState, FormData>(loginAction, {});

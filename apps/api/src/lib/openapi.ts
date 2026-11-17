@@ -66,7 +66,7 @@ export const openApiSpec = {
       "REST API for the Tactyqal Labs blog. Successful responses are `{ data, meta? }`; errors are `{ error: { code, message, details? } }`. Write endpoints need `Authorization: Bearer <token>` from `POST /auth/login`.",
   },
   servers: [{ url: "/api/v1" }],
-  tags: [{ name: "Auth" }, { name: "Posts" }, { name: "Categories" }, { name: "Tags" }],
+  tags: [{ name: "Auth" }, { name: "Posts" }, { name: "Categories" }, { name: "Tags" }, { name: "Leads" }],
   components: {
     securitySchemes: { bearerAuth: { type: "http", scheme: "bearer", bearerFormat: "JWT" } },
     schemas: {
@@ -143,6 +143,27 @@ export const openApiSpec = {
           seoDescription: { type: ["string", "null"] },
           categoryIds: { type: "array", items: { type: "string" } },
           tagIds: { type: "array", items: { type: "string" } },
+        },
+      },
+      LeadInput: {
+        type: "object",
+        required: ["name", "email", "message"],
+        properties: {
+          name: { type: "string", minLength: 2, maxLength: 80 },
+          email: { type: "string", format: "email" },
+          phone: { type: ["string", "null"], maxLength: 30 },
+          message: { type: "string", minLength: 10, maxLength: 2000 },
+        },
+      },
+      Lead: {
+        type: "object",
+        properties: {
+          id: { type: "string" },
+          name: { type: "string" },
+          email: { type: "string", format: "email" },
+          phone: { type: ["string", "null"] },
+          message: { type: "string" },
+          createdAt: { type: "string", format: "date-time" },
         },
       },
       PageMeta: {
@@ -266,6 +287,48 @@ export const openApiSpec = {
         summary: "Delete a post",
         security: [{ bearerAuth: [] }],
         responses: { 204: { description: "Deleted" }, 401: errorResponse("Unauthorized"), 404: errorResponse("Not found") },
+      },
+    },
+    "/leads": {
+      post: {
+        tags: ["Leads"],
+        summary: "Submit the contact form (public, rate limited to 5 per 15 min per IP)",
+        requestBody: { required: true, content: json({ $ref: "#/components/schemas/LeadInput" }) },
+        responses: {
+          201: {
+            description: "Created",
+            content: json({
+              type: "object",
+              properties: {
+                data: { type: "object", properties: { id: { type: "string" }, createdAt: { type: "string", format: "date-time" } } },
+              },
+            }),
+          },
+          400: errorResponse("Validation error"),
+          429: errorResponse("Too many submissions"),
+        },
+      },
+      get: {
+        tags: ["Leads"],
+        summary: "List contact-form leads, newest first",
+        security: [{ bearerAuth: [] }],
+        parameters: [
+          { name: "page", in: "query", schema: { type: "integer", minimum: 1, default: 1 } },
+          { name: "limit", in: "query", schema: { type: "integer", minimum: 1, maximum: 100, default: 20 } },
+        ],
+        responses: {
+          200: {
+            description: "OK",
+            content: json({
+              type: "object",
+              properties: {
+                data: { type: "array", items: { $ref: "#/components/schemas/Lead" } },
+                meta: { $ref: "#/components/schemas/PageMeta" },
+              },
+            }),
+          },
+          401: errorResponse("Unauthorized"),
+        },
       },
     },
     ...termPaths("Categories", "/categories"),

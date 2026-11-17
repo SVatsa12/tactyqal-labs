@@ -485,6 +485,30 @@ export const site = {
       { label: "Hours", value: "Mon–Sat, 9am–7pm", icon: "clock" },
       { label: "Response time", value: "Within 24 hours", icon: "timer" },
     ] satisfies ContactItem[],
+    form: {
+      title: "Send us a message",
+      description: "Tell us a little about your teen and we'll reply within 24 hours.",
+      fields: {
+        name: { label: "Your name", placeholder: "Full name" },
+        email: { label: "Email", placeholder: "you@example.com" },
+        phone: { label: "Phone", optional: "(optional)", placeholder: "+91 98765 43210" },
+        message: { label: "Message", placeholder: "What would your teen like to build?" },
+      },
+      errors: {
+        nameShort: "Please enter at least 2 characters.",
+        nameLong: "Please keep your name under 80 characters.",
+        email: "Please enter a valid email address.",
+        phone: "Use digits, spaces, +, - or brackets only.",
+        messageShort: "Please write at least 10 characters.",
+        messageLong: "Please keep your message under 2000 characters.",
+      },
+      submit: "Send message",
+      submitting: "Sending…",
+      successTitle: "Message sent",
+      successBody: "Thanks! We'll get back to you within 24 hours.",
+      errorTitle: "Couldn't send your message",
+      errorBody: "Please try again, or email us at tactyqal.labs@gmail.com.",
+    },
   },
 
   footer: {

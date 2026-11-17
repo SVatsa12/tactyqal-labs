@@ -89,5 +89,29 @@ export const updateTermSchema = createTermSchema
   .partial()
   .refine((v) => Object.keys(v).length > 0, "Provide at least one field to update");
 
+// ---------------------------------------------------------------- leads
+
+export const createLeadSchema = z.object({
+  name: z.string().trim().min(2, "Name must be at least 2 characters").max(80, "Name must be at most 80 characters"),
+  email: z.string().trim().toLowerCase().email("Enter a valid email address").max(254),
+  phone: z
+    .string()
+    .trim()
+    .max(30, "Phone number is too long")
+    .regex(/^[+\d\s()-]*$/, "Use digits, spaces, +, - or brackets only")
+    .nullish()
+    .transform((v) => (v ? v : null)),
+  message: z
+    .string()
+    .trim()
+    .min(10, "Message must be at least 10 characters")
+    .max(2000, "Message must be at most 2000 characters"),
+});
+
+export const listLeadsQuery = z.object({
+  page: z.coerce.number().int().min(1).default(1),
+  limit: z.coerce.number().int().min(1).max(100).default(20),
+});
+
 export type CreatePostInput = z.infer<typeof createPostSchema>;
 export type UpdatePostInput = z.infer<typeof updatePostSchema>;

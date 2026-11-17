@@ -70,3 +70,15 @@ model Tag {
   wpId  Int?   @unique
   posts Post[]
 }
+
+/// Contact-form submissions from the homepage.
+model Lead {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  message   String
+  createdAt DateTime @default(now())
+
+  @@index([createdAt(sort: Desc)])
+}

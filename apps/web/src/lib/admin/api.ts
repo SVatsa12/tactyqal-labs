@@ -79,5 +79,18 @@ export const adminSchemas = {
   post: z.object({ data: postSchema }),
   terms: z.object({ data: z.array(termWithCountSchema) }),
   term: z.object({ data: termWithCountSchema }),
+  leadList: z.object({
+    data: z.array(
+      z.object({
+        id: z.string(),
+        name: z.string(),
+        email: z.string(),
+        phone: z.string().nullable(),
+        message: z.string(),
+        createdAt: z.string(),
+      }),
+    ),
+    meta: pageMetaSchema,
+  }),
   none: z.unknown(),
 };

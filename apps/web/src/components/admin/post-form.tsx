@@ -5,7 +5,7 @@ import { useActionState } from "react";
 import { Check, ExternalLink } from "lucide-react";
 import { savePostAction, type FormState } from "@/app/admin/actions";
 import { Button } from "@/components/ui/button";
-import { Field, inputCls, textareaCls } from "./field";
+import { Field, inputCls, textareaCls } from "@/components/ui/field";
 import { RichTextEditor } from "./rich-text-editor";
 
 export type PostFormValues = {

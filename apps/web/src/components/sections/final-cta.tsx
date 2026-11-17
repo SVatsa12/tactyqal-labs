@@ -3,8 +3,9 @@ import { site } from "@/content/site";
 import { Button } from "@/components/ui/button";
 import { FadeUp } from "@/components/ui/fade-up";
 import { Icon } from "@/components/ui/icon";
+import { ContactForm } from "./contact-form";
 
-/** The one dark band: final call to action + contact details. */
+/** The one dark band: final call to action, contact details and the contact form. */
 export function FinalCta() {
   const { contact, a11y } = site;
 
@@ -12,11 +13,11 @@ export function FinalCta() {
     <section id={contact.id} aria-labelledby="contact-title" className="px-3 pb-3 md:px-6 md:pb-6">
       <div className="relative overflow-hidden rounded-[var(--radius-panel)] bg-ink text-white">
         {/* flat decorative shapes */}
-        <span aria-hidden="true" className="absolute -right-24 -top-24 size-72 rounded-full bg-brand md:size-96" />
-        <span aria-hidden="true" className="absolute bottom-10 right-[28%] hidden size-12 rounded-2xl bg-accent md:block" />
+        <span aria-hidden="true" className="absolute -left-24 -top-24 size-72 rounded-full bg-brand md:size-80" />
+        <span aria-hidden="true" className="absolute bottom-12 left-[40%] hidden size-12 rounded-2xl bg-accent lg:block" />
 
-        <div className="container-page section-y relative grid gap-14 lg:grid-cols-[1.25fr_1fr] lg:items-end">
-          <FadeUp>
+        <div className="container-page section-y relative grid gap-12 lg:grid-cols-2 lg:gap-16">
+          <FadeUp className="lg:pt-4">
             <h2 id="contact-title" className="text-h2 max-w-xl">
               {contact.title}
             </h2>
@@ -33,23 +34,21 @@ export function FinalCta() {
                 <a href={contact.secondaryCta.href}>{contact.secondaryCta.label}</a>
               </Button>
             </div>
-          </FadeUp>
 
-          <FadeUp delay={0.08}>
-            <div className="rounded-[var(--radius-card)] bg-surface p-7 text-ink">
+            <div className="mt-12 border-t border-white/15 pt-8">
               <h3 className="text-xl">{contact.detailsTitle}</h3>
-              <p className="mt-2 text-[0.9375rem] text-muted">{contact.detailsDescription}</p>
-              <dl className="mt-6 space-y-4">
+              <p className="mt-2 max-w-md text-[0.9375rem] text-on-ink-muted">{contact.detailsDescription}</p>
+              <dl className="mt-6 grid gap-5 sm:grid-cols-2">
                 {contact.details.map((d) => (
                   <div key={d.label} className="flex items-center gap-3.5">
-                    <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-brand-soft text-brand-ink">
+                    <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-white/10 text-accent">
                       <Icon name={d.icon} className="size-[1.125rem]" />
                     </span>
                     <div className="min-w-0">
-                      <dt className="text-sm text-muted">{d.label}</dt>
+                      <dt className="text-sm text-on-ink-muted">{d.label}</dt>
                       <dd className="truncate font-medium">
                         {d.href ? (
-                          <a href={d.href} className="hover:text-brand-ink">
+                          <a href={d.href} className="underline-offset-4 hover:underline">
                             {d.value}
                           </a>
                         ) : (
@@ -61,6 +60,10 @@ export function FinalCta() {
                 ))}
               </dl>
             </div>
+          </FadeUp>
+
+          <FadeUp delay={0.08}>
+            <ContactForm />
           </FadeUp>
         </div>
       </div>

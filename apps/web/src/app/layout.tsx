@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Bricolage_Grotesque, Geist } from "next/font/google";
 import { site } from "@/content/site";
+import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
 
 const bricolage = Bricolage_Grotesque({
@@ -50,6 +51,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           {site.a11y.skipToContent}
         </a>
         {children}
+        <Toaster />
       </body>
     </html>
   );

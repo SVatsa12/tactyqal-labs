@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ExternalLink, FileText, LogOut, Plus, Tags } from "lucide-react";
+import { ExternalLink, FileText, Inbox, LogOut, Plus, Tags } from "lucide-react";
 import { adminFetch, adminSchemas } from "@/lib/admin/api";
 import { logoutAction } from "@/app/admin/actions";
 import { Logo } from "@/components/layout/logo";
@@ -13,6 +13,7 @@ export default async function PanelLayout({ children }: { children: React.ReactN
 
   const nav = [
     { href: "/admin", label: "Posts", icon: FileText },
+    { href: "/admin/leads", label: "Leads", icon: Inbox },
     { href: "/admin/taxonomy", label: "Categories & tags", icon: Tags },
     { href: "/blog", label: "View blog", icon: ExternalLink },
   ];

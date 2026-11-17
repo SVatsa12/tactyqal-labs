@@ -5,7 +5,7 @@ import { useActionState } from "react";
 import { Plus } from "lucide-react";
 import { createTermAction, type FormState } from "@/app/admin/actions";
 import { Button } from "@/components/ui/button";
-import { inputCls } from "./field";
+import { inputCls } from "@/components/ui/field";
 
 export function TermForm({ kind, label }: { kind: "categories" | "tags"; label: string }) {
   const [state, action, pending] = useActionState<FormState, FormData>(createTermAction, {});
