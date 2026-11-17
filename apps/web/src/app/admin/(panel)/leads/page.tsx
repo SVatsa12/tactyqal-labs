@@ -48,11 +48,21 @@ export default async function AdminLeadsPage({ searchParams }: { searchParams: S
             <table className="w-full min-w-[48rem] text-left text-sm">
               <thead className="border-b border-border text-muted">
                 <tr>
-                  <th scope="col" className="px-5 py-3 font-semibold">Name</th>
-                  <th scope="col" className="px-3 py-3 font-semibold">Email</th>
-                  <th scope="col" className="px-3 py-3 font-semibold">Phone</th>
-                  <th scope="col" className="px-3 py-3 font-semibold">Message</th>
-                  <th scope="col" className="px-5 py-3 font-semibold">Received</th>
+                  <th scope="col" className="px-5 py-3 font-semibold">
+                    Name
+                  </th>
+                  <th scope="col" className="px-3 py-3 font-semibold">
+                    Email
+                  </th>
+                  <th scope="col" className="px-3 py-3 font-semibold">
+                    Phone
+                  </th>
+                  <th scope="col" className="px-3 py-3 font-semibold">
+                    Message
+                  </th>
+                  <th scope="col" className="px-5 py-3 font-semibold">
+                    Received
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
@@ -60,7 +70,10 @@ export default async function AdminLeadsPage({ searchParams }: { searchParams: S
                   <tr key={lead.id} className="align-top hover:bg-bg">
                     <td className="px-5 py-3.5 font-semibold">{lead.name}</td>
                     <td className="px-3 py-3.5">
-                      <a href={`mailto:${lead.email}`} className="hover:text-brand-ink hover:underline underline-offset-4">
+                      <a
+                        href={`mailto:${lead.email}`}
+                        className="hover:text-brand-ink hover:underline underline-offset-4"
+                      >
                         {lead.email}
                       </a>
                     </td>

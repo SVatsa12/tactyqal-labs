@@ -51,15 +51,10 @@ const wpPost = z.object({
   excerpt: rendered,
   categories: z.array(z.number()).default([]),
   tags: z.array(z.number()).default([]),
-  yoast_head_json: z
-    .object({ title: z.string().optional(), description: z.string().optional() })
-    .partial()
-    .nullish(),
+  yoast_head_json: z.object({ title: z.string().optional(), description: z.string().optional() }).partial().nullish(),
   _embedded: z
     .object({
-      "wp:featuredmedia": z
-        .array(z.object({ source_url: z.string().optional() }).passthrough())
-        .optional(),
+      "wp:featuredmedia": z.array(z.object({ source_url: z.string().optional() }).passthrough()).optional(),
     })
     .passthrough()
     .optional(),
@@ -108,7 +103,9 @@ async function fetchAll<T>(path: string, schema: z.ZodType<T>, max = Infinity): 
   let totalPages = 1;
   do {
     const sep = path.includes("?") ? "&" : "?";
-    const { body, totalPages: tp } = await fetchJson(`${BASE}/wp-json/wp/v2/${path}${sep}per_page=${PER_PAGE}&page=${page}`);
+    const { body, totalPages: tp } = await fetchJson(
+      `${BASE}/wp-json/wp/v2/${path}${sep}per_page=${PER_PAGE}&page=${page}`,
+    );
     totalPages = tp;
     const items = z.array(z.unknown()).parse(body);
     for (const item of items) {
@@ -177,8 +174,7 @@ async function upsertTerms(model: "category" | "tag", terms: z.infer<typeof wpTe
     const slug = slugify(t.slug || name);
     const db = (model === "category" ? prisma.category : prisma.tag) as typeof prisma.category;
     // Match by wpId first, then adopt an existing term with the same slug.
-    const existing =
-      (await db.findUnique({ where: { wpId: t.id } })) ?? (await db.findUnique({ where: { slug } }));
+    const existing = (await db.findUnique({ where: { wpId: t.id } })) ?? (await db.findUnique({ where: { slug } }));
     const row = existing
       ? await db.update({ where: { id: existing.id }, data: { name, wpId: t.id } })
       : await db.create({ data: { name, slug, wpId: t.id } });

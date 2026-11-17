@@ -9,12 +9,7 @@ export function Logo({ name, inverse = false }: { name: string; inverse?: boolea
         <path d="M9 10.5h14v3.6h-5.2V23h-3.6v-8.9H9z" className="fill-ink" />
         <circle cx="22.5" cy="21.5" r="2.2" className="fill-accent" />
       </svg>
-      <span
-        className={cn(
-          "font-display text-lg font-bold tracking-tight",
-          inverse ? "text-white" : "text-ink",
-        )}
-      >
+      <span className={cn("font-display text-lg font-bold tracking-tight", inverse ? "text-white" : "text-ink")}>
         {name}
       </span>
     </span>

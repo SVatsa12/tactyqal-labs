@@ -14,7 +14,10 @@ export function FinalCta() {
       <div className="relative overflow-hidden rounded-[var(--radius-panel)] bg-ink text-white">
         {/* flat decorative shapes */}
         <span aria-hidden="true" className="absolute -left-24 -top-24 size-72 rounded-full bg-brand md:size-80" />
-        <span aria-hidden="true" className="absolute bottom-12 left-[40%] hidden size-12 rounded-2xl bg-accent lg:block" />
+        <span
+          aria-hidden="true"
+          className="absolute bottom-12 left-[40%] hidden size-12 rounded-2xl bg-accent lg:block"
+        />
 
         <div className="container-page section-y relative grid gap-12 lg:grid-cols-2 lg:gap-16">
           <FadeUp className="lg:pt-4">

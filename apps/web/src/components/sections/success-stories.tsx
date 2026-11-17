@@ -30,7 +30,10 @@ export function SuccessStories() {
               >
                 <StoryPreview
                   kind={story.preview}
-                  className={cn("h-44 border-b border-border", story.wide && "md:h-full md:min-h-60 md:border-b-0 md:border-r")}
+                  className={cn(
+                    "h-44 border-b border-border",
+                    story.wide && "md:h-full md:min-h-60 md:border-b-0 md:border-r",
+                  )}
                 />
                 <div className="flex flex-1 flex-col p-6">
                   <h3 className="text-xl">{story.name}</h3>
@@ -43,7 +46,10 @@ export function SuccessStories() {
                   <p className="mt-3 flex-1 leading-relaxed text-muted">{story.description}</p>
                   <ul className="mt-5 flex flex-wrap gap-2">
                     {story.highlights.map((h) => (
-                      <li key={h} className="rounded-full border border-border bg-bg px-3 py-1 text-sm font-medium text-ink">
+                      <li
+                        key={h}
+                        className="rounded-full border border-border bg-bg px-3 py-1 text-sm font-medium text-ink"
+                      >
                         {h}
                       </li>
                     ))}

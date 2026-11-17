@@ -88,9 +88,7 @@ export default async function BlogPostPage({ params }: { params: Params }) {
 
         <h1 className="mt-4 text-[clamp(2.1rem,5vw,3.5rem)] leading-[1.06]">{post.title}</h1>
 
-        {post.excerpt ? (
-          <p className="mt-5 text-lg leading-relaxed text-muted md:text-xl">{post.excerpt}</p>
-        ) : null}
+        {post.excerpt ? <p className="mt-5 text-lg leading-relaxed text-muted md:text-xl">{post.excerpt}</p> : null}
 
         <div className="mt-7 flex items-center gap-3 text-sm text-muted">
           <span

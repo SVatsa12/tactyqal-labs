@@ -18,7 +18,10 @@ export function LoginForm({ next, expired }: { next?: string; expired: boolean }
         </p>
       ) : null}
       {state.error ? (
-        <p role="alert" className="rounded-xl border border-brand/40 bg-brand-soft px-4 py-3 text-sm font-medium text-ink">
+        <p
+          role="alert"
+          className="rounded-xl border border-brand/40 bg-brand-soft px-4 py-3 text-sm font-medium text-ink"
+        >
           {state.error}
         </p>
       ) : null}

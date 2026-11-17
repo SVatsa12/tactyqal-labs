@@ -36,16 +36,11 @@ type SP = Promise<Record<string, string | string[] | undefined>>;
 
 export default async function BlogIndexPage({ searchParams }: { searchParams: SP }) {
   const raw = await searchParams;
-  const flat = Object.fromEntries(
-    Object.entries(raw).map(([k, v]) => [k, Array.isArray(v) ? v[0] : v]),
-  );
+  const flat = Object.fromEntries(Object.entries(raw).map(([k, v]) => [k, Array.isArray(v) ? v[0] : v]));
   const { page, q, category, tag } = searchParamsSchema.parse(flat);
   const t = site.blogPage;
 
-  const [result, categories] = await Promise.all([
-    getPosts({ page, q, category, tag, limit: 12 }),
-    getCategories(),
-  ]);
+  const [result, categories] = await Promise.all([getPosts({ page, q, category, tag, limit: 12 }), getCategories()]);
 
   const hrefWith = (next: Partial<{ page: number; q: string; category: string; tag: string }>) => {
     const params = new URLSearchParams();
@@ -137,7 +132,10 @@ export default async function BlogIndexPage({ searchParams }: { searchParams: SP
           <p className="mb-8 text-muted">
             {t.resultsFor} <span className="font-semibold text-ink">“{q}”</span>
             {result ? ` · ${result.meta.total}` : null}{" "}
-            <a href={hrefWith({ q: undefined })} className="ml-2 font-semibold text-brand-ink underline-offset-4 hover:underline">
+            <a
+              href={hrefWith({ q: undefined })}
+              className="ml-2 font-semibold text-brand-ink underline-offset-4 hover:underline"
+            >
               {t.clearSearch}
             </a>
           </p>

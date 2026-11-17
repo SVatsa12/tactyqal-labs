@@ -25,7 +25,10 @@ const cat = {
 
 const tag = (name: string): SeedTerm => ({
   name,
-  slug: name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, ""),
+  slug: name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, ""),
 });
 
 const list = (items: string[]) => `<ul>${items.map((i) => `<li>${i}</li>`).join("")}</ul>`;
@@ -327,10 +330,7 @@ ${olist([
 ])}
 
 <h2>Awareness and education</h2>
-${olist([
-  "A school challenge to measure and cut canteen waste.",
-  "A tracker that shows the impact of food saved.",
-])}
+${olist(["A school challenge to measure and cut canteen waste.", "A tracker that shows the impact of food saved."])}
 
 <blockquote><p>The best impact ideas solve a problem for the planet and save someone money at the same time.</p></blockquote>
 

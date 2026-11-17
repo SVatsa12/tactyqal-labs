@@ -31,7 +31,9 @@ export default async function EditPostPage({ params, searchParams }: Props) {
   return (
     <div className="mx-auto max-w-6xl">
       <div className="flex items-center justify-between gap-4">
-        <a href="/admin" className="text-sm font-semibold text-muted hover:text-ink">← Posts</a>
+        <a href="/admin" className="text-sm font-semibold text-muted hover:text-ink">
+          ← Posts
+        </a>
         <DeleteButton action={deletePostAction} fields={{ id: p.id }} itemLabel={p.title} variant="text" />
       </div>
       <h1 className="mt-3 mb-8 line-clamp-2 text-3xl">{p.title}</h1>

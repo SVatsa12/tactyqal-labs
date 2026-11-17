@@ -67,7 +67,15 @@ export function ContactForm() {
       <h3 className="text-xl">{t.title}</h3>
       <p className="mt-1.5 text-[0.9375rem] text-muted">{t.description}</p>
 
-      <form ref={formRef} method="post" noValidate onSubmit={onSubmit} onInput={clearError} className="mt-6 space-y-4" aria-busy={pending}>
+      <form
+        ref={formRef}
+        method="post"
+        noValidate
+        onSubmit={onSubmit}
+        onInput={clearError}
+        className="mt-6 space-y-4"
+        aria-busy={pending}
+      >
         <div className="grid gap-4 sm:grid-cols-2">
           <Field label={t.fields.name.label} htmlFor="contact-name" error={errors.name}>
             <input

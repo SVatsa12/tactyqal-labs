@@ -9,11 +9,7 @@ export function Tools() {
   const { tools, a11y } = site;
 
   return (
-    <section
-      id={tools.id}
-      aria-labelledby="tools-title"
-      className="section-y border-y border-border bg-surface"
-    >
+    <section id={tools.id} aria-labelledby="tools-title" className="section-y border-y border-border bg-surface">
       <div className="container-page">
         <div className="flex flex-col justify-between gap-8 md:flex-row md:items-end">
           <SectionHeading

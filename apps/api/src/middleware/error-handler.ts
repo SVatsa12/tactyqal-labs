@@ -25,11 +25,7 @@ export const errorHandler: ErrorRequestHandler = (err, req, res, _next) => {
     } else {
       httpError = new HttpError("INTERNAL_ERROR", "Database error");
     }
-  } else if (
-    err instanceof SyntaxError &&
-    "type" in err &&
-    (err as { type?: string }).type === "entity.parse.failed"
-  ) {
+  } else if (err instanceof SyntaxError && "type" in err && (err as { type?: string }).type === "entity.parse.failed") {
     httpError = new HttpError("BAD_REQUEST", "Malformed JSON body");
   } else if (
     typeof err === "object" &&

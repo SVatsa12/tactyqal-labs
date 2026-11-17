@@ -30,7 +30,9 @@ export function HeroVisual() {
           <TrendingUp className="size-4 sm:size-5" aria-hidden="true" />
         </span>
         <span className="leading-tight">
-          <span className="block font-display text-sm font-bold tracking-tight sm:text-base">{visual.floating.value}</span>
+          <span className="block font-display text-sm font-bold tracking-tight sm:text-base">
+            {visual.floating.value}
+          </span>
           <span className="block text-[11px] text-muted sm:text-xs">{visual.floating.caption}</span>
         </span>
       </div>

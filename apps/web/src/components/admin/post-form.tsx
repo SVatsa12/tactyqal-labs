@@ -111,7 +111,14 @@ export function PostForm({
           hint="Shown on cards and in search results. Leave empty to generate it from the content."
           error={err("excerpt")}
         >
-          <textarea id="excerpt" name="excerpt" rows={3} maxLength={500} defaultValue={initial.excerpt} className={textareaCls} />
+          <textarea
+            id="excerpt"
+            name="excerpt"
+            rows={3}
+            maxLength={500}
+            defaultValue={initial.excerpt}
+            className={textareaCls}
+          />
         </Field>
 
         <fieldset className="card space-y-5 p-5">
@@ -119,7 +126,12 @@ export function PostForm({
           <Field label="SEO title" htmlFor="seoTitle" hint="Defaults to the post title." error={err("seoTitle")}>
             <input id="seoTitle" name="seoTitle" maxLength={200} defaultValue={initial.seoTitle} className={inputCls} />
           </Field>
-          <Field label="Meta description" htmlFor="seoDescription" hint="Defaults to the excerpt." error={err("seoDescription")}>
+          <Field
+            label="Meta description"
+            htmlFor="seoDescription"
+            hint="Defaults to the excerpt."
+            error={err("seoDescription")}
+          >
             <textarea
               id="seoDescription"
               name="seoDescription"
@@ -182,7 +194,12 @@ export function PostForm({
         </div>
 
         <div className="card space-y-5 p-5">
-          <Field label="URL slug" htmlFor="slug" hint={isEdit ? undefined : "Leave empty to generate from the title."} error={err("slug")}>
+          <Field
+            label="URL slug"
+            htmlFor="slug"
+            hint={isEdit ? undefined : "Leave empty to generate from the title."}
+            error={err("slug")}
+          >
             <div className="flex items-center rounded-xl border border-border bg-surface focus-within:border-ink/40">
               <span className="pl-3.5 text-sm text-muted">/blog/</span>
               <input
@@ -218,18 +235,34 @@ export function PostForm({
   );
 }
 
-function TermPicker({ legend, name, terms, selected }: { legend: string; name: string; terms: Term[]; selected: string[] }) {
+function TermPicker({
+  legend,
+  name,
+  terms,
+  selected,
+}: {
+  legend: string;
+  name: string;
+  terms: Term[];
+  selected: string[];
+}) {
   return (
     <fieldset className="card p-5">
       <legend className="px-1 text-sm font-semibold">{legend}</legend>
       {terms.length === 0 ? (
         <p className="text-sm text-muted">
-          None yet. <a href="/admin/taxonomy" className="font-semibold text-brand-ink underline underline-offset-4">Add some</a>
+          None yet.{" "}
+          <a href="/admin/taxonomy" className="font-semibold text-brand-ink underline underline-offset-4">
+            Add some
+          </a>
         </p>
       ) : (
         <div className="max-h-52 space-y-1 overflow-y-auto pr-1">
           {terms.map((t) => (
-            <label key={t.id} className="flex cursor-pointer items-center gap-2.5 rounded-lg px-2 py-1.5 text-sm hover:bg-bg">
+            <label
+              key={t.id}
+              className="flex cursor-pointer items-center gap-2.5 rounded-lg px-2 py-1.5 text-sm hover:bg-bg"
+            >
               <input
                 type="checkbox"
                 name={name}

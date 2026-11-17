@@ -11,7 +11,12 @@ export function BrowserFrame({
   children: React.ReactNode;
 }) {
   return (
-    <div className={cn("@container overflow-hidden rounded-[var(--radius-card)] border border-border bg-surface shadow-lift", className)}>
+    <div
+      className={cn(
+        "@container overflow-hidden rounded-[var(--radius-card)] border border-border bg-surface shadow-lift",
+        className,
+      )}
+    >
       <div className="flex items-center gap-3 border-b border-border bg-bg px-3.5 py-2.5">
         <span className="flex gap-1.5" aria-hidden="true">
           <span className="size-2.5 rounded-full bg-border" />

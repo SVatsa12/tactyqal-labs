@@ -54,7 +54,10 @@ export default async function AdminPostsPage({ searchParams }: { searchParams: S
           <label htmlFor="admin-search" className="sr-only">
             Search posts
           </label>
-          <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted" aria-hidden="true" />
+          <Search
+            className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted"
+            aria-hidden="true"
+          />
           <input
             id="admin-search"
             name="q"
@@ -91,7 +94,10 @@ export default async function AdminPostsPage({ searchParams }: { searchParams: S
       ) : res.data.data.length === 0 ? (
         <div className="mt-8 rounded-[var(--radius-card)] border border-dashed border-border bg-surface px-6 py-14 text-center">
           <p className="font-semibold">No posts here yet.</p>
-          <Link href="/admin/posts/new" className="mt-2 inline-block font-semibold text-brand-ink underline underline-offset-4">
+          <Link
+            href="/admin/posts/new"
+            className="mt-2 inline-block font-semibold text-brand-ink underline underline-offset-4"
+          >
             Write the first one
           </Link>
         </div>
@@ -101,11 +107,21 @@ export default async function AdminPostsPage({ searchParams }: { searchParams: S
             <table className="w-full min-w-[40rem] text-left text-sm">
               <thead className="border-b border-border text-muted">
                 <tr>
-                  <th scope="col" className="px-5 py-3 font-semibold">Title</th>
-                  <th scope="col" className="px-3 py-3 font-semibold">Status</th>
-                  <th scope="col" className="px-3 py-3 font-semibold">Published</th>
-                  <th scope="col" className="px-3 py-3 font-semibold">Updated</th>
-                  <th scope="col" className="px-3 py-3"><span className="sr-only">Actions</span></th>
+                  <th scope="col" className="px-5 py-3 font-semibold">
+                    Title
+                  </th>
+                  <th scope="col" className="px-3 py-3 font-semibold">
+                    Status
+                  </th>
+                  <th scope="col" className="px-3 py-3 font-semibold">
+                    Published
+                  </th>
+                  <th scope="col" className="px-3 py-3 font-semibold">
+                    Updated
+                  </th>
+                  <th scope="col" className="px-3 py-3">
+                    <span className="sr-only">Actions</span>
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
@@ -121,7 +137,9 @@ export default async function AdminPostsPage({ searchParams }: { searchParams: S
                       <span
                         className={cn(
                           "rounded-full px-2.5 py-1 text-xs font-semibold",
-                          p.status === "PUBLISHED" ? "bg-brand-soft text-brand-ink" : "bg-bg text-muted ring-1 ring-border",
+                          p.status === "PUBLISHED"
+                            ? "bg-brand-soft text-brand-ink"
+                            : "bg-bg text-muted ring-1 ring-border",
                         )}
                       >
                         {p.status === "PUBLISHED" ? "Published" : "Draft"}

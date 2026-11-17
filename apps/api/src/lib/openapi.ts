@@ -28,7 +28,10 @@ const termPaths = (tag: string, base: string) => ({
       security: [{ bearerAuth: [] }],
       requestBody: { required: true, content: json({ $ref: "#/components/schemas/TermInput" }) },
       responses: {
-        201: { description: "Created", content: json({ type: "object", properties: { data: { $ref: "#/components/schemas/Term" } } }) },
+        201: {
+          description: "Created",
+          content: json({ type: "object", properties: { data: { $ref: "#/components/schemas/Term" } } }),
+        },
         400: errorResponse("Validation error"),
         401: errorResponse("Unauthorized"),
         409: errorResponse("Slug already exists"),
@@ -43,7 +46,10 @@ const termPaths = (tag: string, base: string) => ({
       security: [{ bearerAuth: [] }],
       requestBody: { required: true, content: json({ $ref: "#/components/schemas/TermInput" }) },
       responses: {
-        200: { description: "OK", content: json({ type: "object", properties: { data: { $ref: "#/components/schemas/Term" } } }) },
+        200: {
+          description: "OK",
+          content: json({ type: "object", properties: { data: { $ref: "#/components/schemas/Term" } } }),
+        },
         401: errorResponse("Unauthorized"),
         404: errorResponse("Not found"),
       },
@@ -52,7 +58,11 @@ const termPaths = (tag: string, base: string) => ({
       tags: [tag],
       summary: "Delete",
       security: [{ bearerAuth: [] }],
-      responses: { 204: { description: "Deleted" }, 401: errorResponse("Unauthorized"), 404: errorResponse("Not found") },
+      responses: {
+        204: { description: "Deleted" },
+        401: errorResponse("Unauthorized"),
+        404: errorResponse("Not found"),
+      },
     },
   },
 });
@@ -79,7 +89,16 @@ export const openApiSpec = {
             properties: {
               code: {
                 type: "string",
-                enum: ["BAD_REQUEST", "VALIDATION_ERROR", "UNAUTHORIZED", "FORBIDDEN", "NOT_FOUND", "CONFLICT", "RATE_LIMITED", "INTERNAL_ERROR"],
+                enum: [
+                  "BAD_REQUEST",
+                  "VALIDATION_ERROR",
+                  "UNAUTHORIZED",
+                  "FORBIDDEN",
+                  "NOT_FOUND",
+                  "CONFLICT",
+                  "RATE_LIMITED",
+                  "INTERNAL_ERROR",
+                ],
               },
               message: { type: "string" },
               details: {},
@@ -92,11 +111,17 @@ export const openApiSpec = {
         properties: { id: { type: "string" }, name: { type: "string" }, slug: { type: "string" } },
       },
       TermWithCount: {
-        allOf: [{ $ref: "#/components/schemas/Term" }, { type: "object", properties: { postCount: { type: "integer" } } }],
+        allOf: [
+          { $ref: "#/components/schemas/Term" },
+          { type: "object", properties: { postCount: { type: "integer" } } },
+        ],
       },
       TermInput: {
         type: "object",
-        properties: { name: { type: "string", maxLength: 80 }, slug: { type: "string", pattern: "^[a-z0-9]+(?:-[a-z0-9]+)*$" } },
+        properties: {
+          name: { type: "string", maxLength: 80 },
+          slug: { type: "string", pattern: "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+        },
       },
       PostSummary: {
         type: "object",
@@ -138,7 +163,11 @@ export const openApiSpec = {
           content: { type: "string", description: "HTML; sanitized on save" },
           coverImageUrl: { type: ["string", "null"], format: "uri" },
           status: { type: "string", enum: ["DRAFT", "PUBLISHED"] },
-          publishedAt: { type: ["string", "null"], format: "date-time", description: "Set automatically on first publish" },
+          publishedAt: {
+            type: ["string", "null"],
+            format: "date-time",
+            description: "Set automatically on first publish",
+          },
           seoTitle: { type: ["string", "null"] },
           seoDescription: { type: ["string", "null"] },
           categoryIds: { type: "array", items: { type: "string" } },
@@ -200,7 +229,15 @@ export const openApiSpec = {
                   type: "object",
                   properties: {
                     token: { type: "string" },
-                    user: { type: "object", properties: { id: { type: "string" }, email: { type: "string" }, name: { type: "string" }, role: { type: "string" } } },
+                    user: {
+                      type: "object",
+                      properties: {
+                        id: { type: "string" },
+                        email: { type: "string" },
+                        name: { type: "string" },
+                        role: { type: "string" },
+                      },
+                    },
                   },
                 },
               },
@@ -251,21 +288,32 @@ export const openApiSpec = {
         tags: ["Posts"],
         summary: "Create a post",
         security: [{ bearerAuth: [] }],
-        requestBody: { required: true, content: json({ allOf: [{ $ref: "#/components/schemas/PostInput" }, { required: ["title"] }] }) },
+        requestBody: {
+          required: true,
+          content: json({ allOf: [{ $ref: "#/components/schemas/PostInput" }, { required: ["title"] }] }),
+        },
         responses: {
-          201: { description: "Created", content: json({ type: "object", properties: { data: { $ref: "#/components/schemas/Post" } } }) },
+          201: {
+            description: "Created",
+            content: json({ type: "object", properties: { data: { $ref: "#/components/schemas/Post" } } }),
+          },
           400: errorResponse("Validation error"),
           401: errorResponse("Unauthorized"),
         },
       },
     },
     "/posts/{id}": {
-      parameters: [{ name: "id", in: "path", required: true, description: "Post id or slug", schema: { type: "string" } }],
+      parameters: [
+        { name: "id", in: "path", required: true, description: "Post id or slug", schema: { type: "string" } },
+      ],
       get: {
         tags: ["Posts"],
         summary: "Get one post by id or slug",
         responses: {
-          200: { description: "OK", content: json({ type: "object", properties: { data: { $ref: "#/components/schemas/Post" } } }) },
+          200: {
+            description: "OK",
+            content: json({ type: "object", properties: { data: { $ref: "#/components/schemas/Post" } } }),
+          },
           404: errorResponse("Not found (or not published)"),
         },
       },
@@ -275,7 +323,10 @@ export const openApiSpec = {
         security: [{ bearerAuth: [] }],
         requestBody: { required: true, content: json({ $ref: "#/components/schemas/PostInput" }) },
         responses: {
-          200: { description: "OK", content: json({ type: "object", properties: { data: { $ref: "#/components/schemas/Post" } } }) },
+          200: {
+            description: "OK",
+            content: json({ type: "object", properties: { data: { $ref: "#/components/schemas/Post" } } }),
+          },
           400: errorResponse("Validation error"),
           401: errorResponse("Unauthorized"),
           404: errorResponse("Not found"),
@@ -286,7 +337,11 @@ export const openApiSpec = {
         tags: ["Posts"],
         summary: "Delete a post",
         security: [{ bearerAuth: [] }],
-        responses: { 204: { description: "Deleted" }, 401: errorResponse("Unauthorized"), 404: errorResponse("Not found") },
+        responses: {
+          204: { description: "Deleted" },
+          401: errorResponse("Unauthorized"),
+          404: errorResponse("Not found"),
+        },
       },
     },
     "/leads": {
@@ -300,7 +355,10 @@ export const openApiSpec = {
             content: json({
               type: "object",
               properties: {
-                data: { type: "object", properties: { id: { type: "string" }, createdAt: { type: "string", format: "date-time" } } },
+                data: {
+                  type: "object",
+                  properties: { id: { type: "string" }, createdAt: { type: "string", format: "date-time" } },
+                },
               },
             }),
           },

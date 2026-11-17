@@ -38,7 +38,9 @@ export function TimelineTrack({ steps }: { steps: TimelineStep[] }) {
 
       {steps.map((step, i) => (
         <li key={step.weeks} className="relative flex gap-5 md:block">
-          {i < steps.length - 1 ? <MobileConnector fill={fill} index={i} count={steps.length} reduce={!!reduce} /> : null}
+          {i < steps.length - 1 ? (
+            <MobileConnector fill={fill} index={i} count={steps.length} reduce={!!reduce} />
+          ) : null}
           <div
             className={cn(
               "relative z-10 grid size-14 shrink-0 place-items-center rounded-2xl border transition-colors duration-300",

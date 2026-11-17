@@ -58,17 +58,10 @@ postsRouter.get("/", optionalAuth, async (req, res) => {
   const { page, limit, status, q, category, tag } = query(listPostsQuery, req);
 
   const where: Prisma.PostWhereInput = {
-    ...(req.user
-      ? status && status !== "ALL"
-        ? { status }
-        : {}
-      : publicWhere()),
+    ...(req.user ? (status && status !== "ALL" ? { status } : {}) : publicWhere()),
     ...(q
       ? {
-          OR: [
-            { title: { contains: q, mode: "insensitive" } },
-            { excerpt: { contains: q, mode: "insensitive" } },
-          ],
+          OR: [{ title: { contains: q, mode: "insensitive" } }, { excerpt: { contains: q, mode: "insensitive" } }],
         }
       : {}),
     ...(category ? { categories: { some: { slug: category } } } : {}),
@@ -163,10 +156,7 @@ postsRouter.patch("/:id", requireAuth, async (req, res) => {
     data: {
       title: input.title,
       slug: input.slug,
-      excerpt:
-        input.excerpt !== undefined
-          ? (input.excerpt ?? (content ? makeExcerpt(content) : null))
-          : undefined,
+      excerpt: input.excerpt !== undefined ? (input.excerpt ?? (content ? makeExcerpt(content) : null)) : undefined,
       content,
       readingTimeMinutes: content !== undefined ? readingTimeMinutes(content) : undefined,
       coverImageUrl: input.coverImageUrl,

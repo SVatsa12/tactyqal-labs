@@ -1,11 +1,6 @@
 import { ArrowRight, MessageCircle } from "lucide-react";
 import { site } from "@/content/site";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { FadeUp } from "@/components/ui/fade-up";
 import { SectionHeading } from "@/components/ui/section-heading";
 
@@ -16,12 +11,7 @@ export function Faq() {
     <section id={faq.id} aria-labelledby="faq-title" className="section-y">
       <div className="container-page grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
         <div className="lg:sticky lg:top-28 lg:self-start">
-          <SectionHeading
-            id="faq-title"
-            eyebrow={faq.eyebrow}
-            title={faq.title}
-            description={faq.description}
-          />
+          <SectionHeading id="faq-title" eyebrow={faq.eyebrow} title={faq.title} description={faq.description} />
           <FadeUp delay={0.05}>
             <div className="card mt-10 p-6">
               <span className="grid size-11 place-items-center rounded-2xl bg-brand-soft text-brand-ink">

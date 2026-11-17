@@ -12,7 +12,9 @@ export default async function NewPostPage() {
 
   return (
     <div className="mx-auto max-w-6xl">
-      <a href="/admin" className="text-sm font-semibold text-muted hover:text-ink">← Posts</a>
+      <a href="/admin" className="text-sm font-semibold text-muted hover:text-ink">
+        ← Posts
+      </a>
       <h1 className="mt-3 mb-8 text-3xl">New post</h1>
       <PostForm
         initial={{

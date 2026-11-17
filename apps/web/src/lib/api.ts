@@ -46,11 +46,7 @@ export type Post = z.infer<typeof postSchema>;
 export type PageMeta = z.infer<typeof pageMetaSchema>;
 export type Term = z.infer<typeof termWithCountSchema>;
 
-async function getJson<S extends z.ZodType>(
-  path: string,
-  schema: S,
-  revalidate = 60,
-): Promise<z.infer<S> | null> {
+async function getJson<S extends z.ZodType>(path: string, schema: S, revalidate = 60): Promise<z.infer<S> | null> {
   try {
     const res = await fetch(`${API_URL}/api/v1${path}`, {
       next: { revalidate, tags: ["posts"] },
@@ -66,10 +62,7 @@ async function getJson<S extends z.ZodType>(
 
 /** Returns the latest published posts, or null if the API is unreachable/invalid. */
 export async function getLatestPosts(limit: number): Promise<PostSummary[] | null> {
-  const res = await getJson(
-    `/posts?status=published&limit=${limit}`,
-    z.object({ data: z.array(postSummarySchema) }),
-  );
+  const res = await getJson(`/posts?status=published&limit=${limit}`, z.object({ data: z.array(postSummarySchema) }));
   return res?.data ?? null;
 }
 
@@ -86,10 +79,7 @@ export async function getPosts(opts: {
   if (opts.q) qs.set("q", opts.q);
   if (opts.category) qs.set("category", opts.category);
   if (opts.tag) qs.set("tag", opts.tag);
-  return getJson(
-    `/posts?${qs.toString()}`,
-    z.object({ data: z.array(postSummarySchema), meta: pageMetaSchema }),
-  );
+  return getJson(`/posts?${qs.toString()}`, z.object({ data: z.array(postSummarySchema), meta: pageMetaSchema }));
 }
 
 /** undefined = not found; null = API unavailable. */

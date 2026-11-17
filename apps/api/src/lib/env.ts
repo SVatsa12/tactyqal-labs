@@ -7,7 +7,12 @@ const envSchema = z.object({
   CORS_ORIGINS: z
     .string()
     .default("http://localhost:3000")
-    .transform((v) => v.split(",").map((s) => s.trim()).filter(Boolean)),
+    .transform((v) =>
+      v
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean),
+    ),
   JWT_SECRET: z.string().min(16, "JWT_SECRET must be at least 16 characters"),
   JWT_EXPIRES_IN: z.string().default("7d"),
 });

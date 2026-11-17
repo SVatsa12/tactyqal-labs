@@ -4,7 +4,12 @@ import { site } from "@/content/site";
 import type { PostSummary } from "@/lib/api";
 import { CoverPattern } from "./post-card";
 
-const dateFormat = new Intl.DateTimeFormat("en-IN", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
+const dateFormat = new Intl.DateTimeFormat("en-IN", {
+  day: "numeric",
+  month: "short",
+  year: "numeric",
+  timeZone: "UTC",
+});
 
 /** Large horizontal card for the newest post on page 1 of /blog. */
 export function FeaturedPost({ post }: { post: PostSummary }) {
@@ -32,7 +37,9 @@ export function FeaturedPost({ post }: { post: PostSummary }) {
       <div className="flex flex-col p-6 sm:p-8 md:p-10">
         <p className="flex flex-wrap items-center gap-2 text-sm">
           <span className="rounded-full bg-accent px-3 py-1 font-semibold text-ink">{blogPage.featuredLabel}</span>
-          {category ? <span className="font-semibold uppercase tracking-[0.12em] text-brand-ink">{category.name}</span> : null}
+          {category ? (
+            <span className="font-semibold uppercase tracking-[0.12em] text-brand-ink">{category.name}</span>
+          ) : null}
         </p>
         <h2 className="mt-5 text-[clamp(1.6rem,3vw,2.25rem)] leading-tight">
           <a

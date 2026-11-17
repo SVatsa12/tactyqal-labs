@@ -9,11 +9,7 @@ export function Pricing() {
   const { pricing, a11y } = site;
 
   return (
-    <section
-      id={pricing.id}
-      aria-labelledby="pricing-title"
-      className="section-y border-y border-border bg-surface"
-    >
+    <section id={pricing.id} aria-labelledby="pricing-title" className="section-y border-y border-border bg-surface">
       <div className="container-page grid grid-cols-1 items-center gap-14 lg:grid-cols-[1fr_1.1fr]">
         <div>
           <SectionHeading

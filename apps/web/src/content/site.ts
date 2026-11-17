@@ -196,8 +196,7 @@ export const site = {
       },
       {
         name: "Paws of Promise",
-        description:
-          "App for virtual pet adoption that connects pet lovers with pets from shelters.",
+        description: "App for virtual pet adoption that connects pet lovers with pets from shelters.",
         highlights: ["Social impact", "Shelter adoptions"],
         preview: "pets",
       },
@@ -209,8 +208,7 @@ export const site = {
       },
       {
         name: "Converza",
-        description:
-          "Spanish learning app featuring Luna, the friendly AI language learning bot.",
+        description: "Spanish learning app featuring Luna, the friendly AI language learning bot.",
         highlights: ["AI tutor", "Language learning"],
         preview: "chat",
       },
@@ -263,8 +261,7 @@ export const site = {
     id: "program",
     eyebrow: "The program",
     title: "Personal 1:1 live sessions",
-    description:
-      "One hour each, tailored to your teen, with expert guidance at every step from idea to launch.",
+    description: "One hour each, tailored to your teen, with expert guidance at every step from idea to launch.",
     quote: {
       text: "Learn to sell. Learn to build. If you can do both, you will be unstoppable.",
       author: "Naval Ravikant",
@@ -351,12 +348,24 @@ export const site = {
     title: "Free tools to get started",
     description: "Explore our startup assessment tools, used by 1000+ entrepreneurs.",
     items: [
-      { name: "Startup Idea Generator", href: "https://www.tactyqal.com/index.php/Questions/ideaDisplayer", icon: "sparkles" },
+      {
+        name: "Startup Idea Generator",
+        href: "https://www.tactyqal.com/index.php/Questions/ideaDisplayer",
+        icon: "sparkles",
+      },
       { name: "Fundability Assessment", href: "https://tactyqal.com/Tests/Fundable-Startup", icon: "badge-dollar" },
       { name: "Team Evaluation Tool", href: "https://tactyqal.com/Tests/Startup-Team", icon: "users" },
       { name: "Pitch Deck Analyzer", href: "https://www.tactyqal.com/Tests/Pitch-Deck", icon: "file-chart" },
-      { name: "Top 10 Traits for Business Success", href: "https://www.tactyqal.com/Tests/General-Success", icon: "star" },
-      { name: "Cofounder Compatibility Test", href: "https://www.tactyqal.com/Tests/The-Right-Cofounder", icon: "handshake" },
+      {
+        name: "Top 10 Traits for Business Success",
+        href: "https://www.tactyqal.com/Tests/General-Success",
+        icon: "star",
+      },
+      {
+        name: "Cofounder Compatibility Test",
+        href: "https://www.tactyqal.com/Tests/The-Right-Cofounder",
+        icon: "handshake",
+      },
       { name: "Problem-Solution Fit", href: "https://www.tactyqal.com/Tests/Problem-Solution-Fit", icon: "target" },
       { name: "Website Landing Page Assessment", href: "https://www.tactyqal.com/Tests/Landing-Page", icon: "layout" },
     ] satisfies Tool[],
@@ -371,7 +380,10 @@ export const site = {
       { name: "Aarav Sharma", quote: "I had to struggle to find a tech cofounder" },
       { name: "Isha Patel", quote: "Now I feel independent and can build anything I want" },
       { name: "Rohan Verma", quote: "It's the future" },
-      { name: "Simran Kaur", quote: "I can focus on the creative side and don't have to worry about whether it can be built" },
+      {
+        name: "Simran Kaur",
+        quote: "I can focus on the creative side and don't have to worry about whether it can be built",
+      },
       { name: "Devansh Mehta", quote: "I went on from having no idea to launching my app" },
       { name: "Priya Nair", quote: "My impact app was only in my head till I built it" },
     ] satisfies Testimonial[],
@@ -448,8 +460,16 @@ export const site = {
     guarantee: "Results guaranteed or money back",
     scarcity: "Only 15 spots available for the month",
     reassurance: [
-      { title: "1:1, not a group class", description: "Every session is just your teen and their mentor.", icon: "user" },
-      { title: "No coding needed", description: "Beginner friendly, with no-code tools and step-by-step guidance.", icon: "blocks" },
+      {
+        title: "1:1, not a group class",
+        description: "Every session is just your teen and their mentor.",
+        icon: "user",
+      },
+      {
+        title: "No coding needed",
+        description: "Beginner friendly, with no-code tools and step-by-step guidance.",
+        icon: "blocks",
+      },
       { title: "Money-back guarantee", description: "Results guaranteed or your money back.", icon: "shield" },
     ] satisfies Feature[],
     cta: { label: "Enroll now", href: BOOKING_URL } satisfies Link,
@@ -468,7 +488,8 @@ export const site = {
     items: [
       {
         question: "What if my teen has no coding experience?",
-        answer: "No problem! Our program is designed for beginners. We use no-code tools and guide students step-by-step.",
+        answer:
+          "No problem! Our program is designed for beginners. We use no-code tools and guide students step-by-step.",
       },
       {
         question: "How do you guarantee university admissions?",

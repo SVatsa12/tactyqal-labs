@@ -5,13 +5,18 @@ import { cn } from "@/lib/utils";
 /** A small, flat, CSS-only UI hint for each student app. Decorative. */
 export function StoryPreview({ kind, className }: { kind: PreviewKind; className?: string }) {
   return (
-    <div aria-hidden="true" className={cn("relative grid place-items-center overflow-hidden bg-brand-soft p-6", className)}>
+    <div
+      aria-hidden="true"
+      className={cn("relative grid place-items-center overflow-hidden bg-brand-soft p-6", className)}
+    >
       {previews[kind]}
     </div>
   );
 }
 
-const Line = ({ className }: { className?: string }) => <span className={cn("block h-1.5 rounded-full bg-border", className)} />;
+const Line = ({ className }: { className?: string }) => (
+  <span className={cn("block h-1.5 rounded-full bg-border", className)} />
+);
 
 const previews: Record<PreviewKind, React.ReactNode> = {
   // KrishiDrishti: crop chart
@@ -23,7 +28,11 @@ const previews: Record<PreviewKind, React.ReactNode> = {
       </div>
       <div className="mt-3 flex h-16 items-end gap-1.5">
         {[38, 62, 48, 84, 56, 72].map((h, i) => (
-          <span key={i} className={cn("flex-1 rounded-t", i === 3 ? "bg-brand" : "bg-brand/30")} style={{ height: `${h}%` }} />
+          <span
+            key={i}
+            className={cn("flex-1 rounded-t", i === 3 ? "bg-brand" : "bg-brand/30")}
+            style={{ height: `${h}%` }}
+          />
         ))}
       </div>
       <div className="mt-2 flex justify-between">
@@ -107,7 +116,11 @@ const previews: Record<PreviewKind, React.ReactNode> = {
     <div className="w-full max-w-[13rem] rounded-xl bg-ink p-3.5 shadow-soft">
       <div className="flex h-12 items-center gap-[3px]">
         {[30, 55, 80, 45, 95, 60, 35, 70, 90, 50, 65, 40, 85, 55, 30].map((h, i) => (
-          <span key={i} className={cn("flex-1 rounded-full", i < 6 ? "bg-brand" : "bg-white/25")} style={{ height: `${h}%` }} />
+          <span
+            key={i}
+            className={cn("flex-1 rounded-full", i < 6 ? "bg-brand" : "bg-white/25")}
+            style={{ height: `${h}%` }}
+          />
         ))}
       </div>
       <div className="mt-3 flex items-center gap-2.5">
@@ -125,7 +138,9 @@ const previews: Record<PreviewKind, React.ReactNode> = {
   chat: (
     <div className="flex w-full max-w-[13rem] flex-col gap-2">
       <div className="flex items-end gap-1.5">
-        <span className="grid size-6 shrink-0 place-items-center rounded-full bg-brand font-display text-[10px] font-bold text-ink">L</span>
+        <span className="grid size-6 shrink-0 place-items-center rounded-full bg-brand font-display text-[10px] font-bold text-ink">
+          L
+        </span>
         <div className="rounded-2xl rounded-bl-md border border-border bg-surface p-2.5 shadow-soft">
           <Line className="w-24 bg-ink/60" />
           <Line className="mt-1.5 w-16" />

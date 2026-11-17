@@ -11,12 +11,7 @@ export function WhyUs() {
   return (
     <section id={why.id} aria-labelledby="why-title" className="section-y">
       <div className="container-page">
-        <SectionHeading
-          id="why-title"
-          eyebrow={why.eyebrow}
-          title={why.title}
-          description={why.description}
-        />
+        <SectionHeading id="why-title" eyebrow={why.eyebrow} title={why.title} description={why.description} />
 
         <FadeUp className="mt-14">
           <dl className="grid grid-cols-2 rounded-[var(--radius-panel)] border border-border bg-surface shadow-soft lg:grid-cols-4">
@@ -55,9 +50,7 @@ export function WhyUs() {
         <FadeUp className="mt-6">
           <div className="grid items-center gap-8 rounded-[var(--radius-panel)] border border-border bg-surface p-6 shadow-soft md:p-8 lg:grid-cols-[1fr_1.4fr] lg:gap-12">
             <div className="lg:pl-2">
-              <p className="text-sm font-semibold uppercase tracking-[0.14em] text-brand-ink">
-                {video.eyebrow}
-              </p>
+              <p className="text-sm font-semibold uppercase tracking-[0.14em] text-brand-ink">{video.eyebrow}</p>
               <h3 className="mt-3 text-3xl">{video.title}</h3>
               <p className="mt-4 leading-relaxed text-muted">{video.description}</p>
             </div>

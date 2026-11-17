@@ -101,14 +101,39 @@ function Toolbar({ editor }: { editor: Editor }) {
     [
       { label: "Bold", icon: Bold, run: () => editor.chain().focus().toggleBold().run(), active: state.bold },
       { label: "Italic", icon: Italic, run: () => editor.chain().focus().toggleItalic().run(), active: state.italic },
-      { label: "Strikethrough", icon: Strikethrough, run: () => editor.chain().focus().toggleStrike().run(), active: state.strike },
+      {
+        label: "Strikethrough",
+        icon: Strikethrough,
+        run: () => editor.chain().focus().toggleStrike().run(),
+        active: state.strike,
+      },
       { label: "Inline code", icon: Code, run: () => editor.chain().focus().toggleCode().run(), active: state.code },
     ],
     [
-      { label: "Heading 2", icon: Heading2, run: () => editor.chain().focus().toggleHeading({ level: 2 }).run(), active: state.h2 },
-      { label: "Heading 3", icon: Heading3, run: () => editor.chain().focus().toggleHeading({ level: 3 }).run(), active: state.h3 },
-      { label: "Bulleted list", icon: List, run: () => editor.chain().focus().toggleBulletList().run(), active: state.bullet },
-      { label: "Numbered list", icon: ListOrdered, run: () => editor.chain().focus().toggleOrderedList().run(), active: state.ordered },
+      {
+        label: "Heading 2",
+        icon: Heading2,
+        run: () => editor.chain().focus().toggleHeading({ level: 2 }).run(),
+        active: state.h2,
+      },
+      {
+        label: "Heading 3",
+        icon: Heading3,
+        run: () => editor.chain().focus().toggleHeading({ level: 3 }).run(),
+        active: state.h3,
+      },
+      {
+        label: "Bulleted list",
+        icon: List,
+        run: () => editor.chain().focus().toggleBulletList().run(),
+        active: state.bullet,
+      },
+      {
+        label: "Numbered list",
+        icon: ListOrdered,
+        run: () => editor.chain().focus().toggleOrderedList().run(),
+        active: state.ordered,
+      },
       { label: "Quote", icon: Quote, run: () => editor.chain().focus().toggleBlockquote().run(), active: state.quote },
       { label: "Divider", icon: Minus, run: () => editor.chain().focus().setHorizontalRule().run() },
     ],
@@ -123,7 +148,11 @@ function Toolbar({ editor }: { editor: Editor }) {
   ];
 
   return (
-    <div role="toolbar" aria-label="Formatting" className="flex flex-wrap items-center gap-0.5 border-b border-border bg-bg px-2 py-1.5">
+    <div
+      role="toolbar"
+      aria-label="Formatting"
+      className="flex flex-wrap items-center gap-0.5 border-b border-border bg-bg px-2 py-1.5"
+    >
       {groups.map((group, gi) => (
         <React.Fragment key={gi}>
           {gi > 0 ? <span aria-hidden="true" className="mx-1 h-5 w-px bg-border" /> : null}

@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 import { Logo } from "./logo";
 
 /** "/#stories" -> "stories"; "/blog" -> "blog" (the homepage blog section shares the id). */
-const sectionIdOf = (href: string) => (href.includes("#") ? href.split("#")[1] ?? "" : href.replace(/^\//, ""));
+const sectionIdOf = (href: string) => (href.includes("#") ? (href.split("#")[1] ?? "") : href.replace(/^\//, ""));
 
 /** Which homepage section is under the header band right now (null on other pages / the hero). */
 function useActiveSection(ids: string[], enabled: boolean) {
@@ -62,7 +62,9 @@ export function SiteHeader() {
   const activeSection = useActiveSection(ids, isHome);
 
   const isActive = (href: string) =>
-    href === "/blog" ? pathname.startsWith("/blog") || activeSection === "blog" : isHome && activeSection === sectionIdOf(href);
+    href === "/blog"
+      ? pathname.startsWith("/blog") || activeSection === "blog"
+      : isHome && activeSection === sectionIdOf(href);
 
   // In the sheet, same-page section links scroll after the sheet has closed and released its scroll lock.
   const onSheetLinkClick = (event: React.MouseEvent<HTMLAnchorElement>, href: string) => {
@@ -80,7 +82,9 @@ export function SiteHeader() {
     const target = document.getElementById(id);
     if (!target) return;
     window.history.pushState(null, "", `#${id}`);
-    target.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+    target.scrollIntoView({
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+    });
     target.setAttribute("tabindex", "-1");
     target.focus({ preventScroll: true });
   };

@@ -8,16 +8,10 @@ import { cn } from "@/lib/utils";
 // shadcn/ui Accordion, restyled: card rows with a plus that turns into an x.
 export const Accordion = AccordionPrimitive.Root;
 
-export function AccordionItem({
-  className,
-  ...props
-}: React.ComponentProps<typeof AccordionPrimitive.Item>) {
+export function AccordionItem({ className, ...props }: React.ComponentProps<typeof AccordionPrimitive.Item>) {
   return (
     <AccordionPrimitive.Item
-      className={cn(
-        "card overflow-hidden transition-colors data-[state=open]:border-ink/15",
-        className,
-      )}
+      className={cn("card overflow-hidden transition-colors data-[state=open]:border-ink/15", className)}
       {...props}
     />
   );

@@ -39,9 +39,7 @@ const apiErrorSchema = z.object({
   }),
 });
 
-export type SubmitResult =
-  | { ok: true }
-  | { ok: false; message?: string; fields?: LeadErrors };
+export type SubmitResult = { ok: true } | { ok: false; message?: string; fields?: LeadErrors };
 
 /**
  * Sent from the browser straight to the API, so the API's per-IP rate limit

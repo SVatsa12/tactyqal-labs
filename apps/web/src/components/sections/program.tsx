@@ -8,11 +8,7 @@ export function Program() {
   const { program, a11y } = site;
 
   return (
-    <section
-      id={program.id}
-      aria-labelledby="program-title"
-      className="section-y"
-    >
+    <section id={program.id} aria-labelledby="program-title" className="section-y">
       <div className="container-page">
         <div className="flex flex-col justify-between gap-8 lg:flex-row lg:items-end">
           <SectionHeading
@@ -24,10 +20,7 @@ export function Program() {
           <FadeUp>
             <ul className="flex flex-wrap gap-2">
               {program.sessionFacts.map((fact) => (
-                <li
-                  key={fact}
-                  className="rounded-full bg-brand-soft px-3.5 py-1.5 text-sm font-medium text-brand-ink"
-                >
+                <li key={fact} className="rounded-full bg-brand-soft px-3.5 py-1.5 text-sm font-medium text-brand-ink">
                   {fact}
                 </li>
               ))}
