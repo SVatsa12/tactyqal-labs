@@ -3,9 +3,9 @@ import cors from "cors";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import { pinoHttp } from "pino-http";
-import swaggerUi from "swagger-ui-express";
 import { env, isProd, isTest } from "./lib/env.js";
 import { HttpError } from "./lib/errors.js";
+import { docsCsp, docsInitScript, docsPage } from "./lib/docs-page.js";
 import { openApiSpec } from "./lib/openapi.js";
 import { pingDb, withDbRetry } from "./lib/prisma.js";
 import { errorHandler, notFoundHandler } from "./middleware/error-handler.js";
@@ -52,13 +52,12 @@ export function createApp() {
     }),
   );
 
-  // Docs: Swagger UI needs inline scripts/styles, so relax CSP for this path only.
-  app.use(
-    "/api/docs",
-    helmet({ contentSecurityPolicy: false }),
-    swaggerUi.serve,
-    swaggerUi.setup(openApiSpec, { customSiteTitle: "Tactyqal Blog API" }),
-  );
+  // Docs: Swagger UI from a CDN (see lib/docs-page.ts), with its own CSP for this page only.
+  app.get("/api/docs", (_req, res) => {
+    res.setHeader("Content-Security-Policy", docsCsp);
+    res.type("html").send(docsPage);
+  });
+  app.get("/api/docs/init.js", (_req, res) => res.type("js").send(docsInitScript));
   app.get("/api/openapi.json", (_req, res) => res.json(openApiSpec));
 
   const v1 = Router();

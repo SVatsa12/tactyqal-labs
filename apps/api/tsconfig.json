@@ -13,7 +13,6 @@
     "resolveJsonModule": true,
     "forceConsistentCasingInFileNames": true,
     "outDir": "dist",
-    "rootDir": "src",
     "sourceMap": true
   },
   "include": ["src"]
