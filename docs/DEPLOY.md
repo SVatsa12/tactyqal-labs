@@ -30,7 +30,7 @@ The Neon database already has the migrations and the seed data (admin user, cate
 
 ## 1. Vercel project #1: API
 
-How it works: Vercel's zero-config Express support finds `apps/api/index.js`, which default-exports the app from `createApp()` (no `listen()`). The whole API becomes one Vercel Function. The build runs `pnpm install` (whose `postinstall` runs `prisma generate`, including the `rhel-openssl-3.0.x` engine for Vercel's runtime) and then `pnpm run build` (`prisma generate` + `tsc` → `dist/`, which `index.js` loads). Local dev and `pnpm start` still use `src/server.ts`.
+How it works: Vercel's zero-config Express support finds `apps/api/index.js`, which default-exports the app from `createApp()` (no `listen()`). The whole API becomes one Vercel Function. The build runs `pnpm install` (whose `postinstall` runs `prisma generate`, including the `rhel-openssl-3.0.x` engine for Vercel's runtime) and then `pnpm run build`: `prisma generate`, `tsc` (the type check), and `bundle-vercel.mjs`, which writes `dist/vercel/app.js` for `index.js` to load. That bundle inlines `sanitize-html`, which is CommonJS but `require()`s the ESM-only `htmlparser2`; Vercel's runtime can't `require()` an ES module (`ERR_REQUIRE_ESM`), so the sanitizer has to be bundled. All other packages stay external. The Node version comes from `"engines": { "node": "22.x" }` in `apps/api/package.json`, which overrides the project setting. Local dev and `pnpm start` still use `src/server.ts`.
 
 1. vercel.com → **Add New… → Project** → **Import** `SVatsa12/tactyqal-labs` (install the Vercel GitHub app for the repo if asked).
 2. **Configure Project**:
@@ -144,6 +144,7 @@ If the homepage says "New articles are on their way" or /blog says "The blog is 
 
 ## Troubleshooting
 
+- **`FUNCTION_INVOCATION_FAILED` with `ERR_REQUIRE_ESM`**: a CommonJS package is `require()`-ing an ESM-only one. Add that CommonJS package to `INLINE` in `apps/api/bundle-vercel.mjs` so esbuild bundles it, then redeploy.
 - **API returns 500 on every route**: API project → **Logs**. `Invalid environment variables` lists the missing variable. `PrismaClientInitializationError … Query Engine` means the build didn't run `prisma generate`: redeploy with **Build Cache** off (Deployments → ⋯ → Redeploy → untick "Use existing Build Cache").
 - **API build fails at install**: make sure `NODE_ENV` is not set as a variable on the API project, and that **Root Directory** is `apps/api` with "Include files outside the root directory" left on (default).
 - **Health returns 503**: Neon is still waking up or unreachable. Retry after a few seconds, and check `DATABASE_URL` (pooled host).
