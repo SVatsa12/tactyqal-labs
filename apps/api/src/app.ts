@@ -4,7 +4,7 @@ import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import { pinoHttp } from "pino-http";
 import swaggerUi from "swagger-ui-express";
-import { env, isProd } from "./lib/env.js";
+import { env, isProd, isTest } from "./lib/env.js";
 import { HttpError } from "./lib/errors.js";
 import { openApiSpec } from "./lib/openapi.js";
 import { prisma } from "./lib/prisma.js";
@@ -23,10 +23,10 @@ export function createApp() {
 
   app.use(
     pinoHttp({
-      level: isProd ? "info" : "debug",
+      level: isTest ? "silent" : isProd ? "info" : "debug",
       autoLogging: { ignore: (req) => req.url === "/api/v1/health" },
       redact: ["req.headers.authorization", "req.headers.cookie"],
-      ...(isProd ? {} : { transport: { target: "pino-pretty", options: { singleLine: true } } }),
+      ...(isProd || isTest ? {} : { transport: { target: "pino-pretty", options: { singleLine: true } } }),
     }),
   );
   app.use(helmet());
