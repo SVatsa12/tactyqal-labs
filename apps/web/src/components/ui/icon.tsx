@@ -1,0 +1,61 @@
+import {
+  BadgeDollarSign,
+  Blocks,
+  Clock,
+  Code2,
+  FileBarChart,
+  GraduationCap,
+  Handshake,
+  Infinity as InfinityIcon,
+  LayoutTemplate,
+  Lightbulb,
+  Mail,
+  PenTool,
+  Phone,
+  Presentation,
+  Rocket,
+  Search,
+  Sparkles,
+  Star,
+  Target,
+  Timer,
+  Trophy,
+  User,
+  Users,
+  Wallet,
+  type LucideIcon,
+  type LucideProps,
+} from "lucide-react";
+import type { IconKey } from "@/content/site";
+
+const icons: Record<IconKey, LucideIcon> = {
+  user: User,
+  blocks: Blocks,
+  trophy: Trophy,
+  graduation: GraduationCap,
+  wallet: Wallet,
+  infinity: InfinityIcon,
+  presentation: Presentation,
+  lightbulb: Lightbulb,
+  sparkles: Sparkles,
+  "badge-dollar": BadgeDollarSign,
+  users: Users,
+  "file-chart": FileBarChart,
+  star: Star,
+  handshake: Handshake,
+  target: Target,
+  layout: LayoutTemplate,
+  mail: Mail,
+  phone: Phone,
+  clock: Clock,
+  timer: Timer,
+  search: Search,
+  pen: PenTool,
+  code: Code2,
+  rocket: Rocket,
+};
+
+export function Icon({ name, ...props }: { name: IconKey } & LucideProps) {
+  const Cmp = icons[name];
+  return <Cmp aria-hidden="true" strokeWidth={1.75} {...props} />;
+}
