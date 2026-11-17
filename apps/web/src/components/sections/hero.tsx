@@ -2,14 +2,14 @@ import { ArrowRight, Check, ShieldCheck } from "lucide-react";
 import { site } from "@/content/site";
 import { Button } from "@/components/ui/button";
 import { FadeUp } from "@/components/ui/fade-up";
-import { PhoneMockup } from "@/components/ui/phone-mockup";
+import { HeroVisual } from "./hero-visual";
 
 export function Hero() {
   const { hero, a11y } = site;
 
   return (
     <section aria-labelledby="hero-title" className="relative overflow-hidden">
-      <div className="container-page grid items-center gap-16 pb-20 pt-12 md:pb-28 md:pt-20 lg:grid-cols-[1.15fr_0.85fr] lg:gap-12">
+      <div className="container-page grid items-center gap-16 pb-20 pt-12 md:pb-28 md:pt-20 lg:grid-cols-[1fr_1fr] lg:gap-10">
         {/* Copy */}
         <div>
           <FadeUp>
@@ -66,7 +66,7 @@ export function Hero() {
         </div>
 
         {/* Visual */}
-        <FadeUp delay={0.1} className="relative mx-auto w-full max-w-[22rem] lg:max-w-none">
+        <FadeUp delay={0.1} className="relative mx-auto w-full max-w-[34rem] lg:max-w-none">
           <HeroVisual />
         </FadeUp>
       </div>
@@ -78,41 +78,12 @@ export function Hero() {
             {hero.stats.map((stat) => (
               <div key={stat.label} className="flex flex-col-reverse gap-1 px-7 py-6 md:px-9 md:py-8">
                 <dt className="text-muted">{stat.label}</dt>
-                <dd className="font-display text-4xl font-bold tracking-tight md:text-5xl">{stat.value}</dd>
+                <dd className="font-display text-4xl font-bold tracking-tight lg:text-5xl">{stat.value}</dd>
               </div>
             ))}
           </dl>
         </FadeUp>
       </div>
     </section>
-  );
-}
-
-function HeroVisual() {
-  const { mockup } = site.hero;
-  return (
-    <div className="relative mx-auto aspect-square w-full max-w-[26rem]">
-      {/* flat backdrop shapes */}
-      <div aria-hidden="true" className="absolute inset-[6%] rounded-full bg-brand-soft" />
-      <div aria-hidden="true" className="absolute right-[4%] top-[8%] size-16 rounded-2xl bg-accent md:size-20" />
-      <div aria-hidden="true" className="absolute bottom-[10%] left-[2%] size-10 rounded-full border-2 border-ink" />
-
-      <div className="absolute left-1/2 top-1/2 w-[52%] -translate-x-1/2 -translate-y-1/2 rotate-[-4deg]">
-        <PhoneMockup kind="insights" appName={mockup.appName} />
-      </div>
-
-      {/* floating chips */}
-      <div className="card absolute left-0 top-[18%] px-3.5 py-2.5 md:-left-4">
-        <p className="text-xs text-muted">{mockup.weekLabel}</p>
-        <p className="flex items-center gap-1.5 font-display text-sm font-bold tracking-tight">
-          <span className="size-2 rounded-full bg-brand" aria-hidden="true" />
-          {mockup.status}
-        </p>
-      </div>
-      <div className="card absolute bottom-[14%] right-0 px-3.5 py-2.5 md:-right-2">
-        <p className="font-display text-sm font-bold tracking-tight">{mockup.appName}</p>
-        <p className="text-xs text-muted">{mockup.caption}</p>
-      </div>
-    </div>
   );
 }

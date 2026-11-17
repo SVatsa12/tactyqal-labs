@@ -2,7 +2,6 @@ import { ArrowRight } from "lucide-react";
 import { site } from "@/content/site";
 import { Button } from "@/components/ui/button";
 import { FadeUp } from "@/components/ui/fade-up";
-import { Icon } from "@/components/ui/icon";
 import { SectionHeading } from "@/components/ui/section-heading";
 
 export function Program() {
@@ -12,7 +11,7 @@ export function Program() {
     <section
       id={program.id}
       aria-labelledby="program-title"
-      className="section-y border-y border-border bg-surface"
+      className="section-y"
     >
       <div className="container-page">
         <div className="flex flex-col justify-between gap-8 lg:flex-row lg:items-end">
@@ -36,27 +35,8 @@ export function Program() {
           </FadeUp>
         </div>
 
-        {/* Timeline */}
-        <ol className="relative mt-16 grid gap-5 md:grid-cols-4">
-          <span
-            aria-hidden="true"
-            className="absolute left-0 right-0 top-7 hidden h-px bg-border md:block"
-          />
-          {program.steps.map((step, i) => (
-            <FadeUp as="li" key={step.weeks} delay={i * 0.06} className="relative">
-              <div className="relative z-10 grid size-14 place-items-center rounded-2xl border border-border bg-surface text-brand-ink shadow-soft">
-                <Icon name={step.icon} className="size-6" />
-              </div>
-              <p className="mt-6 text-sm font-semibold uppercase tracking-[0.12em] text-muted">
-                {step.weeks}
-              </p>
-              <h3 className="mt-2 text-xl">{step.title}</h3>
-            </FadeUp>
-          ))}
-        </ol>
-
         {/* Quote + outcomes */}
-        <div className="mt-20 grid gap-5 lg:grid-cols-[1.3fr_1fr]">
+        <div className="mt-14 grid gap-5 lg:grid-cols-[1.3fr_1fr]">
           <FadeUp>
             <figure className="h-full rounded-[var(--radius-panel)] bg-brand-soft p-8 md:p-10">
               <svg viewBox="0 0 32 24" className="h-6 w-8 fill-brand" aria-hidden="true">

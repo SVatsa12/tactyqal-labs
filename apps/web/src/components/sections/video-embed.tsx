@@ -28,7 +28,7 @@ export function VideoEmbed() {
         >
           {/* flat decorative shapes */}
           <span aria-hidden="true" className="absolute -right-10 -top-10 size-48 rounded-full bg-brand" />
-          <span aria-hidden="true" className="absolute right-24 top-20 size-10 rounded-xl bg-accent" />
+          <span aria-hidden="true" className="absolute right-24 top-20 hidden size-10 rounded-xl bg-accent md:block" />
 
           <span className="relative grid size-16 place-items-center rounded-full bg-surface text-ink shadow-lift transition-transform duration-200 group-hover:scale-105 md:size-20">
             <Play className="ml-1 size-7 fill-ink" aria-hidden="true" />

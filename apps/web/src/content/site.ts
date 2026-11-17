@@ -35,8 +35,8 @@ export type IconKey =
   | "code"
   | "rocket";
 
-/** Which CSS-built mockup screen to draw inside a phone frame. */
-export type MockupKind = "insights" | "shop" | "subscription" | "pets" | "media" | "chat";
+/** Which CSS-built mini-UI preview to draw on a success-story card. */
+export type PreviewKind = "crops" | "shop" | "books" | "pets" | "media" | "chat";
 
 export type Stat = { value: string; label: string };
 
@@ -45,10 +45,13 @@ export type SuccessStory = {
   description: string;
   /** Short fact chips, each taken from the description on the live site. */
   highlights: string[];
-  mockup: MockupKind;
+  preview: PreviewKind;
+  /** Wide bento card with a metric chip (stories with a revenue fact on the live site). */
+  wide?: boolean;
+  metric?: string;
 };
 
-export type ProgramStep = { weeks: string; title: string; icon: IconKey };
+export type TimelineStep = { weeks: string; title: string; description: string; icon: IconKey };
 
 export type Feature = { title: string; description: string; icon: IconKey };
 
@@ -92,6 +95,7 @@ export const site = {
     skipToContent: "Skip to content",
     openMenu: "Open menu",
     closeMenu: "Close menu",
+    menuTitle: "Menu",
     primaryNav: "Primary",
     footerNav: "Footer",
     opensInNewTab: "(opens in a new tab)",
@@ -99,7 +103,7 @@ export const site = {
 
   nav: {
     links: [
-      { label: "Success stories", href: "/#success" },
+      { label: "Success stories", href: "/#stories" },
       { label: "Program", href: "/#program" },
       { label: "Why us", href: "/#why" },
       { label: "Tools", href: "/#tools" },
@@ -108,7 +112,7 @@ export const site = {
       { label: "FAQ", href: "/#faq" },
       { label: "Contact", href: "/#contact" },
     ] satisfies Link[],
-    cta: { label: "Book free consultation", href: BOOKING_URL } satisfies Link,
+    cta: { label: "Book free consultation", href: "/#contact" } satisfies Link,
   },
 
   hero: {
@@ -125,7 +129,7 @@ export const site = {
       "Media coverage",
     ],
     primaryCta: { label: "Book free consultation", href: BOOKING_URL } satisfies Link,
-    secondaryCta: { label: "See success stories", href: "/#success" } satisfies Link,
+    secondaryCta: { label: "See success stories", href: "/#stories" } satisfies Link,
     stats: [
       { value: "100+", label: "Students mentored" },
       { value: "Top", label: "University admissions" },
@@ -137,82 +141,142 @@ export const site = {
       price: "₹16,000",
       guarantee: "Results guaranteed",
     },
-    mockup: {
-      appName: "KrishiDrishti",
-      caption: "A student-built app",
-      weekLabel: "Week 8",
-      status: "Launched",
+    /** Text inside the CSS-built hero composition (decorative app screens). */
+    visual: {
+      label:
+        "Illustration: a KrishiDrishti soil report in a browser window, a Converza chat with Luna on a phone, and a card reading ₹9,000 in week one.",
+      browser: {
+        tab: "KrishiDrishti",
+        title: "Soil report",
+        subtitle: "Field 1",
+        status: "Analysis ready",
+        nutrientsTitle: "Soil nutrients",
+        nutrients: [
+          { label: "Nitrogen", value: 72 },
+          { label: "Phosphorus", value: 46 },
+          { label: "Potassium", value: 63 },
+        ],
+        cropTitle: "Recommended crop",
+        crop: "Wheat",
+        cropNote: "Best match for this soil",
+        moistureTitle: "Moisture this week",
+        moisture: [42, 55, 48, 66, 58, 72, 64],
+      },
+      phone: {
+        appName: "Converza",
+        botName: "Luna",
+        botStatus: "AI tutor",
+        messages: [
+          { from: "bot", text: "¡Hola! Soy Luna. ¿Cómo estás?" },
+          { from: "user", text: "¡Muy bien, gracias!" },
+          { from: "bot", text: "¡Excelente! Vamos a practicar." },
+        ] satisfies { from: "bot" | "user"; text: string }[],
+        inputPlaceholder: "Escribe…",
+      },
+      floating: { value: "₹9,000 in week one", caption: "Elenor Vegan Handbags" },
     },
   },
 
   success: {
-    id: "success",
+    id: "stories",
     eyebrow: "Success stories",
-    title: "Real students. Real apps. Real success.",
+    title: "Real students. Real apps. Real results.",
     description:
       "Every one of these started as an idea in a teenager's head. Eight weeks later, it was a working product.",
+    // Order matters for the bento grid: wide, 1, 1 / 1, 1, wide.
     stories: [
+      {
+        name: "Elenor Vegan Handbags",
+        description:
+          "Corporate gifting platform that sells vegan handbags, started by a 16 year old and generated INR 9,000 in the first week.",
+        highlights: ["Corporate gifting", "Vegan handbags"],
+        preview: "shop",
+        wide: true,
+        metric: "Started at 16 · ₹9,000 in week one",
+      },
       {
         name: "KrishiDrishti",
         description:
           "AI-powered soil analysis & crop recommendation app that can impact millions of local farmers in India.",
         highlights: ["AI-powered", "Farmers in India"],
-        mockup: "insights",
-      },
-      {
-        name: "Elenor Vegan Handbags",
-        description:
-          "Corporate gifting platform that sells vegan handbags, started by a 16 year old and generated INR 9,000 in the first week.",
-        highlights: ["Founded at 16", "₹9,000 in week one"],
-        mockup: "shop",
-      },
-      {
-        name: "One Last Chapter",
-        description:
-          "Book subscription service for kids. Started by a 13-year old and is generating INR 100,000 monthly revenue.",
-        highlights: ["Founded at 13", "₹100,000 / month"],
-        mockup: "subscription",
+        preview: "crops",
       },
       {
         name: "Paws of Promise",
         description:
           "App for virtual pet adoption that connects pet lovers with pets from shelters.",
         highlights: ["Social impact", "Shelter adoptions"],
-        mockup: "pets",
+        preview: "pets",
       },
       {
         name: "AudioNova",
         description: "AI music and video production company.",
         highlights: ["AI-powered", "Music & video"],
-        mockup: "media",
+        preview: "media",
       },
       {
         name: "Converza",
         description:
           "Spanish learning app featuring Luna, the friendly AI language learning bot.",
         highlights: ["AI tutor", "Language learning"],
-        mockup: "chat",
+        preview: "chat",
+      },
+      {
+        name: "One Last Chapter",
+        description:
+          "Book subscription service for kids. Started by a 13-year old and is generating INR 100,000 monthly revenue.",
+        highlights: ["Book subscription", "For kids"],
+        preview: "books",
+        wide: true,
+        metric: "Started at 13 · ₹1 lakh a month",
       },
     ] satisfies SuccessStory[],
+  },
+
+  timeline: {
+    id: "timeline",
+    eyebrow: "How it works",
+    title: "From idea to a live app in 8 weeks",
+    description: "Four two-week phases, each guided by a mentor in personal 1:1 sessions.",
+    steps: [
+      {
+        weeks: "Weeks 1–2",
+        title: "Ideation & market research",
+        description: "Find a problem worth solving and check that real people have it.",
+        icon: "lightbulb",
+      },
+      {
+        weeks: "Weeks 3–4",
+        title: "Design & prototyping",
+        description: "Sketch the screens and turn them into a clickable prototype.",
+        icon: "pen",
+      },
+      {
+        weeks: "Weeks 5–6",
+        title: "Full-stack development",
+        description: "Build the working app with no-code tools, from screens to data.",
+        icon: "code",
+      },
+      {
+        weeks: "Weeks 7–8",
+        title: "Launch & marketing",
+        description: "Put it in front of real users, pitch it and launch it publicly.",
+        icon: "rocket",
+      },
+    ] satisfies TimelineStep[],
   },
 
   program: {
     id: "program",
     eyebrow: "The program",
-    title: "From idea to full app in 8 weeks",
+    title: "Personal 1:1 live sessions",
     description:
-      "Personal 1:1 live sessions, one hour each, with expert guidance at every step.",
-    steps: [
-      { weeks: "Week 1–2", title: "Ideation & market research", icon: "search" },
-      { weeks: "Week 3–4", title: "Design & prototyping", icon: "pen" },
-      { weeks: "Week 5–6", title: "Full-stack development", icon: "code" },
-      { weeks: "Week 7–8", title: "Launch & marketing", icon: "rocket" },
-    ] satisfies ProgramStep[],
+      "One hour each, tailored to your teen, with expert guidance at every step from idea to launch.",
     quote: {
       text: "Learn to sell. Learn to build. If you can do both, you will be unstoppable.",
       author: "Naval Ravikant",
     },
-    sessionFacts: ["Personal 1:1 live sessions", "1 hour each", "Expert guidance"],
+    sessionFacts: ["1 hour each", "Tailored to your teen", "Expert guidance"],
     outcomesLabel: "What it leads to",
     outcomes: ["University admissions", "Revenue generation", "International recognition", "Grants"],
     cta: { label: "Start your journey today", href: BOOKING_URL } satisfies Link,
@@ -222,6 +286,12 @@ export const site = {
     id: "why",
     eyebrow: "Why Tactyqal",
     title: "Why parents choose Tactyqal Labs",
+    stats: [
+      { value: "100+", label: "Students mentored" },
+      { value: "1000+", label: "Entrepreneurs use our free tools" },
+      { value: "8 weeks", label: "From idea to launch" },
+      { value: "1 hr", label: "Live 1:1 sessions" },
+    ] satisfies Stat[],
     description:
       "No group classes, no theory-only lectures. Your teen ships something real, with a mentor beside them the whole way.",
     features: [
@@ -517,7 +587,7 @@ export const site = {
       {
         title: "Program",
         links: [
-          { label: "Success stories", href: "/#success" },
+          { label: "Success stories", href: "/#stories" },
           { label: "How it works", href: "/#program" },
           { label: "Pricing", href: "/#pricing" },
           { label: "FAQ", href: "/#faq" },

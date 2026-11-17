@@ -2,6 +2,7 @@ import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { Hero } from "@/components/sections/hero";
 import { SuccessStories } from "@/components/sections/success-stories";
+import { Timeline } from "@/components/sections/timeline";
 import { Program } from "@/components/sections/program";
 import { WhyUs } from "@/components/sections/why-us";
 import { Tools } from "@/components/sections/tools";
@@ -21,6 +22,7 @@ export default function HomePage() {
       <main id="main">
         <Hero />
         <SuccessStories />
+        <Timeline />
         <Program />
         <WhyUs />
         <Tools />
