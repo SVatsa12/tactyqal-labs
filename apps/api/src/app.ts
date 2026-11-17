@@ -7,7 +7,7 @@ import swaggerUi from "swagger-ui-express";
 import { env, isProd, isTest } from "./lib/env.js";
 import { HttpError } from "./lib/errors.js";
 import { openApiSpec } from "./lib/openapi.js";
-import { prisma } from "./lib/prisma.js";
+import { pingDb, withDbRetry } from "./lib/prisma.js";
 import { errorHandler, notFoundHandler } from "./middleware/error-handler.js";
 import { authRouter } from "./routes/auth.js";
 import { leadsRouter } from "./routes/leads.js";
@@ -62,8 +62,14 @@ export function createApp() {
   app.get("/api/openapi.json", (_req, res) => res.json(openApiSpec));
 
   const v1 = Router();
+  // Tolerates a Neon cold start: each attempt waits up to connect_timeout (15s) and is retried once.
+  // Still down -> 503, and the platform health check simply polls again.
   v1.get("/health", async (_req, res) => {
-    await prisma.$queryRaw`SELECT 1`;
+    try {
+      await withDbRetry(pingDb, { attempts: 2, delayMs: 1500 });
+    } catch {
+      throw new HttpError("SERVICE_UNAVAILABLE", "Database is not reachable yet, try again shortly");
+    }
     res.json({ data: { status: "ok" } });
   });
   v1.use("/auth", authRouter);

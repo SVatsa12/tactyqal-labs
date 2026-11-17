@@ -1,12 +1,30 @@
 import { env } from "./lib/env.js";
-import { prisma } from "./lib/prisma.js";
+import { pingDb, prisma, withDbRetry } from "./lib/prisma.js";
 import { createApp } from "./app.js";
 
 const app = createApp();
 
+// Listen straight away (PORT comes from the platform), then wake the database in the background.
+// Until it answers, /api/v1/health returns 503 and the platform health check keeps waiting.
 const server = app.listen(env.PORT, () => {
-  console.log(`API listening on http://localhost:${env.PORT} (docs: /api/docs)`);
+  console.log(`API listening on port ${env.PORT} (docs: /api/docs)`);
+  void warmUpDatabase();
 });
+
+async function warmUpDatabase() {
+  const started = Date.now();
+  try {
+    await withDbRetry(pingDb, {
+      attempts: 6,
+      delayMs: 2000,
+      onRetry: (attempt) => console.warn(`Database not reachable yet (attempt ${attempt}), retrying...`),
+    });
+    console.log(`Database connected in ${Date.now() - started}ms`);
+  } catch (err) {
+    // Don't exit: requests will retry the connection, and the health check reports the state.
+    console.error("Database still unreachable after start-up retries:", err instanceof Error ? err.message : err);
+  }
+}
 
 async function shutdown(signal: string) {
   console.log(`${signal} received, shutting down`);

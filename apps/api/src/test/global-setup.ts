@@ -1,5 +1,10 @@
 import { execSync } from "node:child_process";
 
+/** Inlined from lib/prisma.ts so global setup doesn't construct a PrismaClient. */
+function withConnectTimeout(url: string): string {
+  return /[?&]connect_timeout=/.test(url) ? url : `${url}${url.includes("?") ? "&" : "?"}connect_timeout=15`;
+}
+
 /** host (without Neon's "-pooler") + database + schema: what actually identifies the data. */
 function dataKey(raw: string): string {
   const u = new URL(raw);
@@ -32,15 +37,23 @@ export default function setup() {
     );
   }
 
-  const directUrl = process.env.TEST_DIRECT_URL ?? testUrl;
-  try {
-    execSync("pnpm exec prisma migrate deploy", {
-      env: { ...process.env, DATABASE_URL: testUrl, DIRECT_URL: directUrl },
-      stdio: "pipe",
-    });
-  } catch (error) {
-    const out = error as { stdout?: Buffer; stderr?: Buffer };
-    console.error(out.stdout?.toString(), out.stderr?.toString());
-    throw new Error("Could not migrate the test database (see output above).");
+  // Same cold-start allowance as the app (lib/prisma.ts): 15s to connect, and a couple of retries.
+  const directUrl = withConnectTimeout(process.env.TEST_DIRECT_URL ?? testUrl);
+  for (let attempt = 1; ; attempt++) {
+    try {
+      execSync("pnpm exec prisma migrate deploy", {
+        env: { ...process.env, DATABASE_URL: withConnectTimeout(testUrl), DIRECT_URL: directUrl },
+        stdio: "pipe",
+      });
+      return;
+    } catch (error) {
+      if (attempt < 3) {
+        console.warn(`  test database not reachable yet (attempt ${attempt}/3), retrying...`);
+        continue;
+      }
+      const out = error as { stdout?: Buffer; stderr?: Buffer };
+      console.error(out.stdout?.toString(), out.stderr?.toString());
+      throw new Error("Could not migrate the test database (see output above).");
+    }
   }
 }

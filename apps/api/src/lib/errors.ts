@@ -6,7 +6,8 @@ export type ErrorCode =
   | "NOT_FOUND"
   | "CONFLICT"
   | "RATE_LIMITED"
-  | "INTERNAL_ERROR";
+  | "INTERNAL_ERROR"
+  | "SERVICE_UNAVAILABLE";
 
 const statusByCode: Record<ErrorCode, number> = {
   BAD_REQUEST: 400,
@@ -17,6 +18,7 @@ const statusByCode: Record<ErrorCode, number> = {
   CONFLICT: 409,
   RATE_LIMITED: 429,
   INTERNAL_ERROR: 500,
+  SERVICE_UNAVAILABLE: 503,
 };
 
 export class HttpError extends Error {

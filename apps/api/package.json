@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "tsx watch --env-file=.env src/server.ts",
     "build": "prisma generate && tsc -p tsconfig.build.json",
-    "start": "node --env-file=.env dist/server.js",
+    "start": "node dist/scripts/migrate-deploy.js && node dist/server.js",
     "typecheck": "tsc --noEmit",
     "db:migrate": "prisma migrate dev",
     "db:deploy": "prisma migrate deploy",
@@ -14,7 +14,8 @@
     "import:wp": "tsx --env-file=.env src/scripts/import-wordpress.ts",
     "test": "vitest run",
     "test:watch": "vitest",
-    "content:recompute": "tsx --env-file=.env src/scripts/recompute-content.ts"
+    "content:recompute": "tsx --env-file=.env src/scripts/recompute-content.ts",
+    "start:local": "node --env-file=.env dist/server.js"
   },
   "dependencies": {
     "@prisma/client": "6",
@@ -26,6 +27,7 @@
     "jsonwebtoken": "^9.0.3",
     "pino": "^10.4.0",
     "pino-http": "^11.0.0",
+    "prisma": "6",
     "sanitize-html": "^2.18.2",
     "slugify": "^1.6.9",
     "swagger-ui-express": "^5.0.1",
@@ -40,7 +42,6 @@
     "@types/supertest": "6",
     "@types/swagger-ui-express": "^4.1.8",
     "pino-pretty": "^13.2.0",
-    "prisma": "6",
     "supertest": "7",
     "tsx": "^4.23.15",
     "typescript": "~5.9",

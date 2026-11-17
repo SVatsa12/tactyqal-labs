@@ -10,6 +10,13 @@ import { API_URL } from "@/lib/urls";
 
 export { API_URL };
 
+/**
+ * Give up on the API after this long and render the friendly fallback instead. Long enough for a
+ * cold Neon compute behind the API (a few seconds), short enough that a hung API never hangs a page.
+ * A fallback render is only cached until the next revalidation (60s), then the real posts come back.
+ */
+const API_TIMEOUT_MS = 8000;
+
 const term = z.object({ id: z.string(), name: z.string(), slug: z.string() });
 
 export const postSummarySchema = z.object({
@@ -51,7 +58,7 @@ async function getJson<S extends z.ZodType>(path: string, schema: S, revalidate 
   try {
     const res = await fetch(`${API_URL}/api/v1${path}`, {
       next: { revalidate, tags: ["posts"] },
-      signal: AbortSignal.timeout(5000),
+      signal: AbortSignal.timeout(API_TIMEOUT_MS),
     });
     if (!res.ok) return null;
     const parsed = schema.safeParse(await res.json());
@@ -88,7 +95,7 @@ export async function getPost(slug: string): Promise<Post | null | undefined> {
   try {
     const res = await fetch(`${API_URL}/api/v1/posts/${encodeURIComponent(slug)}`, {
       next: { revalidate: 60, tags: ["posts", `post:${slug}`] },
-      signal: AbortSignal.timeout(5000),
+      signal: AbortSignal.timeout(API_TIMEOUT_MS),
     });
     if (res.status === 404) return undefined;
     if (!res.ok) return null;

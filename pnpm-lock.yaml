@@ -41,6 +41,9 @@ importers:
       pino-http:
         specifier: ^11.0.0
         version: 11.0.0
+      prisma:
+        specifier: '6'
+        version: 6.19.3(typescript@5.9.3)
       sanitize-html:
         specifier: ^2.18.2
         version: 2.18.2
@@ -78,9 +81,6 @@ importers:
       pino-pretty:
         specifier: ^13.2.0
         version: 13.2.0
-      prisma:
-        specifier: '6'
-        version: 6.19.3(typescript@5.9.3)
       supertest:
         specifier: '7'
         version: 7.3.2

@@ -14,10 +14,11 @@ const nextConfig: NextConfig = {
   },
   poweredByHeader: false,
   images: {
-    // Blog cover images come from the API (and imported WordPress media).
+    // Blog cover images are arbitrary https URLs (admin input and imported WordPress media).
+    // Plain http is only allowed for a local API during development.
     remotePatterns: [
       { protocol: "https", hostname: "**" },
-      { protocol: "http", hostname: "localhost" },
+      ...(process.env.NODE_ENV === "production" ? [] : [{ protocol: "http" as const, hostname: "localhost" }]),
     ],
   },
 };

@@ -10,7 +10,7 @@ const envSchema = z.object({
     .transform((v) =>
       v
         .split(",")
-        .map((s) => s.trim())
+        .map((s) => s.trim().replace(/\/+$/, "")) // browsers send Origin without a trailing slash
         .filter(Boolean),
     ),
   JWT_SECRET: z.string().min(16, "JWT_SECRET must be at least 16 characters"),

@@ -20,6 +20,8 @@ import { htmlToText, makeExcerpt, readingTimeMinutes, sanitizeContent, slugify }
 import { seedPosts } from "./seed-posts.js";
 
 const { values: args } = parseArgs({
+  // pnpm forwards the `--` separator from `pnpm import:wp -- --limit 20`; drop it.
+  args: process.argv.slice(2).filter((a) => a !== "--"),
   options: {
     url: { type: "string" },
     limit: { type: "string" },
@@ -33,6 +35,8 @@ const LIMIT = args.limit ? Number(args.limit) : Infinity;
 const DRY_RUN = args["dry-run"] ?? false;
 const CONCURRENCY = Math.max(1, Number(args.concurrency) || 5);
 const PER_PAGE = 100;
+/** Per-request timeout: a WordPress host that accepts the connection but never answers must not hang the import. */
+const REQUEST_TIMEOUT_MS = 15_000;
 
 // ---------------------------------------------------------------- WP shapes (only what we use)
 
@@ -67,6 +71,13 @@ type WpPost = z.infer<typeof wpPost>;
 /** WordPress is down or not answering with JSON; nothing should be written. */
 class WpUnreachableError extends Error {}
 
+const isTimeout = (err: unknown) => err instanceof Error && (err.name === "TimeoutError" || err.name === "AbortError");
+
+function describeFetchError(err: unknown): string {
+  if (isTimeout(err)) return `no response within ${REQUEST_TIMEOUT_MS / 1000}s`;
+  return err instanceof Error ? err.message : "network error";
+}
+
 async function fetchJson(url: string, attempt = 1): Promise<{ body: unknown; totalPages: number }> {
   const retry = async (reason: string) => {
     if (attempt < 4) {
@@ -78,9 +89,13 @@ async function fetchJson(url: string, attempt = 1): Promise<{ body: unknown; tot
 
   let res: Response;
   try {
-    res = await fetch(url, { headers: { Accept: "application/json", "User-Agent": "tactyqal-importer/1.0" } });
+    res = await fetch(url, {
+      headers: { Accept: "application/json", "User-Agent": "tactyqal-importer/1.0" },
+      // Covers the headers and the body read below.
+      signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+    });
   } catch (err) {
-    return retry(err instanceof Error ? err.message : "network error");
+    return retry(describeFetchError(err));
   }
   if (res.status >= 500 || res.status === 429) return retry(`${res.status} ${res.statusText}`);
   if (!res.ok) throw new Error(`GET ${url} -> ${res.status} ${res.statusText}`);
@@ -91,14 +106,18 @@ async function fetchJson(url: string, attempt = 1): Promise<{ body: unknown; tot
   let body: unknown;
   try {
     body = await res.json();
-  } catch {
-    return retry("invalid JSON");
+  } catch (err) {
+    return retry(isTimeout(err) ? describeFetchError(err) : "invalid JSON");
   }
   return { body, totalPages: Number(res.headers.get("x-wp-totalpages") ?? "1") };
 }
 
 async function fetchAll<T>(path: string, schema: z.ZodType<T>, max = Infinity): Promise<T[]> {
   const out: T[] = [];
+  const label = path.split("?")[0] ?? path; // "posts", "categories", "tags"
+  // One line per page (the three lists are fetched in parallel, so no carriage-return redraws).
+  const progress = (page: number, totalPages: number) =>
+    console.log(`  ${label}: page ${page}/${totalPages} — ${out.length} ${label}`);
   let page = 1;
   let totalPages = 1;
   do {
@@ -112,12 +131,14 @@ async function fetchAll<T>(path: string, schema: z.ZodType<T>, max = Infinity): 
       const parsed = schema.safeParse(item);
       if (parsed.success) out.push(parsed.data);
       else console.warn(`  skipped malformed item in ${path}: ${parsed.error.issues[0]?.message}`);
-      if (out.length >= max) return out;
+      if (out.length >= max) {
+        progress(page, totalPages);
+        return out;
+      }
     }
-    process.stdout.write(`\r  ${path.split("?")[0]}: page ${page}/${totalPages} (${out.length})`);
+    progress(page, totalPages);
     page++;
   } while (page <= totalPages);
-  process.stdout.write("\n");
   return out;
 }
 
