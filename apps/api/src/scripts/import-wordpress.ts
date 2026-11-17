@@ -8,11 +8,16 @@
  *
  * Idempotent: posts, categories and tags are upserted by their WordPress id,
  * so re-running updates existing rows instead of creating duplicates.
+ * Posts created by `db:seed` (same slug, no WordPress id yet) are adopted and updated.
+ *
+ * If WordPress is down (network error, 5xx, or an HTML error page), the script
+ * exits 0 and leaves the existing (seed) data untouched.
  */
 import { parseArgs } from "node:util";
 import { z } from "zod";
 import { prisma } from "../lib/prisma.js";
 import { htmlToText, makeExcerpt, readingTimeMinutes, sanitizeContent, slugify } from "../lib/content.js";
+import { seedPosts } from "./seed-posts.js";
 
 const { values: args } = parseArgs({
   options: {
@@ -64,16 +69,37 @@ type WpPost = z.infer<typeof wpPost>;
 
 // ---------------------------------------------------------------- fetch helpers
 
+/** WordPress is down or not answering with JSON; nothing should be written. */
+class WpUnreachableError extends Error {}
+
 async function fetchJson(url: string, attempt = 1): Promise<{ body: unknown; totalPages: number }> {
-  const res = await fetch(url, { headers: { Accept: "application/json", "User-Agent": "tactyqal-importer/1.0" } });
-  if (!res.ok) {
-    if (attempt < 4 && (res.status >= 500 || res.status === 429)) {
+  const retry = async (reason: string) => {
+    if (attempt < 4) {
       await new Promise((r) => setTimeout(r, attempt * 1500));
       return fetchJson(url, attempt + 1);
     }
-    throw new Error(`GET ${url} -> ${res.status} ${res.statusText}`);
+    throw new WpUnreachableError(`GET ${url} -> ${reason}`);
+  };
+
+  let res: Response;
+  try {
+    res = await fetch(url, { headers: { Accept: "application/json", "User-Agent": "tactyqal-importer/1.0" } });
+  } catch (err) {
+    return retry(err instanceof Error ? err.message : "network error");
   }
-  return { body: await res.json(), totalPages: Number(res.headers.get("x-wp-totalpages") ?? "1") };
+  if (res.status >= 500 || res.status === 429) return retry(`${res.status} ${res.statusText}`);
+  if (!res.ok) throw new Error(`GET ${url} -> ${res.status} ${res.statusText}`);
+
+  // A broken WP install can answer 200 with an HTML error page.
+  const type = res.headers.get("content-type") ?? "";
+  if (!type.includes("json")) return retry(`expected JSON, got ${type || "unknown content type"}`);
+  let body: unknown;
+  try {
+    body = await res.json();
+  } catch {
+    return retry("invalid JSON");
+  }
+  return { body, totalPages: Number(res.headers.get("x-wp-totalpages") ?? "1") };
 }
 
 async function fetchAll<T>(path: string, schema: z.ZodType<T>, max = Infinity): Promise<T[]> {
@@ -161,9 +187,19 @@ async function upsertTerms(model: "category" | "tag", terms: z.infer<typeof wpTe
   return idByWpId;
 }
 
-async function resolveSlug(slug: string, wpId: number): Promise<string> {
-  const clash = await prisma.post.findUnique({ where: { slug }, select: { wpId: true } });
-  if (!clash || clash.wpId === wpId) return slug;
+const SEEDED_SLUGS = new Set(seedPosts.map((p) => p.slug));
+
+/** The row this WP post should update: same wpId, or a seeded fallback post with the same slug. */
+async function findExisting(wpId: number, slug: string) {
+  const byWpId = await prisma.post.findUnique({ where: { wpId }, select: { id: true } });
+  if (byWpId) return byWpId;
+  if (!SEEDED_SLUGS.has(slug)) return null;
+  return prisma.post.findFirst({ where: { slug, wpId: null }, select: { id: true } });
+}
+
+async function resolveSlug(slug: string, ownId: string | undefined, wpId: number): Promise<string> {
+  const clash = await prisma.post.findUnique({ where: { slug }, select: { id: true } });
+  if (!clash || clash.id === ownId) return slug;
   return `${slug}-wp${wpId}`; // a native post already owns this slug
 }
 
@@ -217,27 +253,27 @@ async function main() {
       const { categoryWpIds, tagWpIds, ...fields } = p;
       const categories = categoryWpIds.flatMap((id) => (catIds.has(id) ? [{ id: catIds.get(id)! }] : []));
       const tagsConn = tagWpIds.flatMap((id) => (tagIds.has(id) ? [{ id: tagIds.get(id)! }] : []));
-      const slug = await resolveSlug(fields.slug, fields.wpId);
-      const existed = await prisma.post.findUnique({ where: { wpId: fields.wpId }, select: { id: true } });
+      const existing = await findExisting(fields.wpId, fields.slug);
+      const slug = await resolveSlug(fields.slug, existing?.id, fields.wpId);
 
-      await prisma.post.upsert({
-        where: { wpId: fields.wpId },
-        create: {
-          ...fields,
-          slug,
-          authorId: author?.id ?? null,
-          categories: { connect: categories },
-          tags: { connect: tagsConn },
-        },
-        update: {
-          ...fields,
-          slug,
-          categories: { set: categories },
-          tags: { set: tagsConn },
-        },
-      });
-      if (existed) updated++;
-      else created++;
+      if (existing) {
+        await prisma.post.update({
+          where: { id: existing.id },
+          data: { ...fields, slug, categories: { set: categories }, tags: { set: tagsConn } },
+        });
+        updated++;
+      } else {
+        await prisma.post.create({
+          data: {
+            ...fields,
+            slug,
+            authorId: author?.id ?? null,
+            categories: { connect: categories },
+            tags: { connect: tagsConn },
+          },
+        });
+        created++;
+      }
     } catch (err) {
       failed++;
       console.error(`\n  failed wp#${p.wpId} (${p.slug}): ${err instanceof Error ? err.message : String(err)}`);
@@ -251,6 +287,12 @@ async function main() {
 
 main()
   .catch((err: unknown) => {
+    if (err instanceof WpUnreachableError) {
+      console.log("\nWordPress unreachable — seed data remains in place");
+      console.log(`  (${err.message})`);
+      process.exitCode = 0;
+      return;
+    }
     console.error("\nImport failed:", err instanceof Error ? err.message : err);
     process.exitCode = 1;
   })
