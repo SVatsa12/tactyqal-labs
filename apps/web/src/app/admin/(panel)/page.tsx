@@ -5,6 +5,7 @@ import { z } from "zod";
 import { adminFetch, adminSchemas } from "@/lib/admin/api";
 import { deletePostAction } from "@/app/admin/actions";
 import { DeleteButton } from "@/components/admin/delete-button";
+import { FlashToast } from "@/components/admin/flash-toast";
 import { Pagination } from "@/components/blog/pagination";
 import { cn } from "@/lib/utils";
 
@@ -65,11 +66,7 @@ export default async function AdminPostsPage({ searchParams }: { searchParams: S
         </form>
       </div>
 
-      {deleted ? (
-        <p role="status" className="mt-6 rounded-xl bg-brand-soft px-4 py-3 text-sm">
-          Post deleted.
-        </p>
-      ) : null}
+      {deleted ? <FlashToast param="deleted" message="Post deleted" /> : null}
 
       <nav aria-label="Filter by status" className="mt-6 flex gap-1 border-b border-border">
         {(["all", "published", "draft"] as const).map((s) => (

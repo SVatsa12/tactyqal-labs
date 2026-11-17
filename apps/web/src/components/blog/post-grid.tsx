@@ -15,12 +15,13 @@ export function toCardData(p: PostSummary): PostCardData {
   };
 }
 
-export function PostGrid({ posts }: { posts: PostSummary[] }) {
+/** `patternOffset` shifts the fallback cover patterns (e.g. after a featured post). */
+export function PostGrid({ posts, patternOffset = 0 }: { posts: PostSummary[]; patternOffset?: number }) {
   return (
     <ul className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
       {posts.map((post, i) => (
         <FadeUp as="li" key={post.id} delay={(i % 3) * 0.05}>
-          <PostCard post={toCardData(post)} index={i} />
+          <PostCard post={toCardData(post)} index={i + patternOffset} />
         </FadeUp>
       ))}
     </ul>

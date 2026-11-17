@@ -73,7 +73,12 @@ function TermPanel({
                   {t.slug} · {t.postCount ?? 0} posts
                 </p>
               </div>
-              <DeleteButton action={deleteTermAction} fields={{ kind, id: t.id }} itemLabel={t.name} />
+              <DeleteButton
+                action={deleteTermAction}
+                fields={{ kind, id: t.id }}
+                itemLabel={t.name}
+                successMessage={`Deleted “${t.name}”`}
+              />
             </li>
           ))}
         </ul>

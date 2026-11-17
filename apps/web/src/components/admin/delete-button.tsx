@@ -2,6 +2,7 @@
 
 import { useFormStatus } from "react-dom";
 import { Trash2 } from "lucide-react";
+import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
 type Props = {
@@ -10,6 +11,8 @@ type Props = {
   /** Shown in the confirm dialog, e.g. the post title. */
   itemLabel: string;
   variant?: "icon" | "text";
+  /** Toast shown after the action returns. Omit when the action redirects (use FlashToast there). */
+  successMessage?: string;
 };
 
 function Submit({ itemLabel, variant }: { itemLabel: string; variant: "icon" | "text" }) {
@@ -31,10 +34,21 @@ function Submit({ itemLabel, variant }: { itemLabel: string; variant: "icon" | "
 }
 
 /** A small form that asks for confirmation before running a delete server action. */
-export function DeleteButton({ action, fields, itemLabel, variant = "icon" }: Props) {
+export function DeleteButton({ action, fields, itemLabel, variant = "icon", successMessage }: Props) {
+  const run = async (formData: FormData) => {
+    try {
+      await action(formData);
+      if (successMessage) toast.success(successMessage);
+    } catch (error) {
+      // redirect() from the action surfaces here as a special error; let Next handle it.
+      if (error instanceof Error && "digest" in error && String(error.digest).startsWith("NEXT_REDIRECT")) throw error;
+      toast.error(`Couldn't delete “${itemLabel}”`);
+    }
+  };
+
   return (
     <form
-      action={action}
+      action={run}
       onSubmit={(e) => {
         if (!window.confirm(`Delete “${itemLabel}”? This can't be undone.`)) e.preventDefault();
       }}

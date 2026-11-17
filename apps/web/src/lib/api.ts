@@ -112,3 +112,18 @@ export async function getCategories(): Promise<Term[] | null> {
   const res = await getJson("/categories", z.object({ data: z.array(termWithCountSchema) }), 300);
   return res?.data ?? null;
 }
+
+/**
+ * Every published post (slug + dates), paging through the API 100 at a time.
+ * Used by generateStaticParams and the sitemap; returns [] if the API is down.
+ */
+export async function getAllPublishedPosts(): Promise<PostSummary[]> {
+  const all: PostSummary[] = [];
+  for (let page = 1; page <= 50; page++) {
+    const res = await getPosts({ page, limit: 100 });
+    if (!res) break;
+    all.push(...res.data);
+    if (page >= res.meta.totalPages) break;
+  }
+  return all;
+}

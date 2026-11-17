@@ -3,6 +3,7 @@ import { Bricolage_Grotesque, Geist } from "next/font/google";
 import { site } from "@/content/site";
 import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
+import { SITE_URL } from "@/lib/site-url";
 
 const bricolage = Bricolage_Grotesque({
   subsets: ["latin"],
@@ -17,10 +18,9 @@ const geist = Geist({
   display: "swap",
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: site.meta.title,
     template: `%s · ${site.brand.name}`,

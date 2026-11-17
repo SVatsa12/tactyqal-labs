@@ -33,7 +33,8 @@ export type IconKey =
   | "search"
   | "pen"
   | "code"
-  | "rocket";
+  | "rocket"
+  | "shield";
 
 /** Which CSS-built mini-UI preview to draw on a success-story card. */
 export type PreviewKind = "crops" | "shop" | "books" | "pets" | "media" | "chat";
@@ -58,14 +59,6 @@ export type Feature = { title: string; description: string; icon: IconKey };
 export type Tool = { name: string; href: string; icon: IconKey };
 
 export type Testimonial = { name: string; quote: string };
-
-export type FallbackPost = {
-  title: string;
-  excerpt: string;
-  readMinutes: number;
-  publishedAt: string; // ISO date
-  href: string;
-};
 
 export type Faq = { question: string; answer: string };
 
@@ -392,54 +385,11 @@ export const site = {
     defaultAuthor: "Tactyqal",
     readMoreLabel: "Read article",
     minReadSuffix: "min read",
-    allPostsCta: { label: "Read all articles", href: "https://tactyqal.com/blog" } satisfies Link,
+    allPostsCta: { label: "Read all articles", href: "/blog" } satisfies Link,
+    loadingLabel: "Loading articles",
+    unavailable: "New articles are on their way. Browse the blog in a minute.",
     /** Number of posts to show on the homepage. */
     limit: 3,
-    /** Shown only if the blog API is unreachable, so the section never renders empty. */
-    fallbackPosts: [
-      {
-        title: "50 no-code startup app ideas",
-        excerpt: "Find a list of 50 unique ideas you can explore for your startup…",
-        readMinutes: 5,
-        publishedAt: "2025-07-09",
-        href: "https://tactyqal.com/blog/50-no-code-startup-ideas-to-build-without-programming-skills/",
-      },
-      {
-        title: "The elevator pitch for business entrepreneurs",
-        excerpt: "An elevator pitch is the fastest way to describe what your startup…",
-        readMinutes: 3,
-        publishedAt: "2024-05-01",
-        href: "https://www.tactyqal.com/blog/elevator-pitch-with-examples-for-business-entrepreneurs/",
-      },
-      {
-        title: "How to build a tech startup team?",
-        excerpt: "In the early days, the fewer employees, the better. Managing people takes up a lot of time…",
-        readMinutes: 4,
-        publishedAt: "2024-04-20",
-        href: "https://www.tactyqal.com/blog/how-to-build-a-tech-startup-team-2/",
-      },
-      {
-        title: "11 reasons why startups fail at the idea stage",
-        excerpt: "The default state of a startup is failure and there are many…",
-        readMinutes: 3,
-        publishedAt: "2024-04-10",
-        href: "https://www.tactyqal.com/blog/11-reasons-why-startups-fail-at-idea-stage/",
-      },
-      {
-        title: "30 startup ideas to solve food waste problems",
-        excerpt: "Food waste is a massive problem. Every year, we throw away one-third of all food…",
-        readMinutes: 4,
-        publishedAt: "2024-03-15",
-        href: "https://tactyqal.com/blog/30-startup-ideas-for-solving-food-waste-problems/",
-      },
-      {
-        title: "50 startup ideas for Gen-Z entrepreneurs",
-        excerpt: "Looking at the opportunities ahead, Generation Z entrepreneurs have advantages…",
-        readMinutes: 6,
-        publishedAt: "2024-03-05",
-        href: "https://tactyqal.com/blog/50-startup-ideas-for-generation-z-entrepreneurs/",
-      },
-    ] satisfies FallbackPost[],
   },
 
   /** Public blog pages (/blog, /blog/[slug]). */
@@ -469,7 +419,9 @@ export const site = {
     tagsLabel: "Tags",
     ctaTitle: "Want your teen to build something like this?",
     ctaBody: "8 weeks of 1:1 mentoring, from idea to a launched full-stack app. No coding needed.",
-    ctaButton: { label: "Book free consultation", href: BOOKING_URL } satisfies Link,
+    ctaButton: { label: "Book free consultation", href: "/#contact" } satisfies Link,
+    featuredLabel: "Latest article",
+    loadingLabel: "Loading articles",
     notFoundTitle: "Article not found",
     notFoundBody: "This article may have moved or been unpublished.",
   },
@@ -495,6 +447,11 @@ export const site = {
     ],
     guarantee: "Results guaranteed or money back",
     scarcity: "Only 15 spots available for the month",
+    reassurance: [
+      { title: "1:1, not a group class", description: "Every session is just your teen and their mentor.", icon: "user" },
+      { title: "No coding needed", description: "Beginner friendly, with no-code tools and step-by-step guidance.", icon: "blocks" },
+      { title: "Money-back guarantee", description: "Results guaranteed or your money back.", icon: "shield" },
+    ] satisfies Feature[],
     cta: { label: "Enroll now", href: BOOKING_URL } satisfies Link,
   },
 
@@ -502,7 +459,12 @@ export const site = {
     id: "faq",
     eyebrow: "FAQ",
     title: "Frequently asked questions",
-    description: "Still unsure? Book a free 15-minute call and ask us anything.",
+    description: "Answers to what parents ask us most.",
+    stillQuestions: {
+      title: "Still have questions?",
+      body: "Send us a message or book a free 15-minute call and ask us anything.",
+      cta: { label: "Contact us", href: "/#contact" } satisfies Link,
+    },
     items: [
       {
         question: "What if my teen has no coding experience?",

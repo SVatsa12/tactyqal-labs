@@ -81,7 +81,7 @@ export function PostCard({ post, index }: { post: PostCardData; index: number })
 }
 
 /** Flat geometric cover for posts without an image. */
-function CoverPattern({ index }: { index: number }) {
+export function CoverPattern({ index }: { index: number }) {
   const variant = index % 3;
   return (
     <svg

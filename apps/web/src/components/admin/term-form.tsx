@@ -3,6 +3,7 @@
 import * as React from "react";
 import { useActionState } from "react";
 import { Plus } from "lucide-react";
+import { toast } from "sonner";
 import { createTermAction, type FormState } from "@/app/admin/actions";
 import { Button } from "@/components/ui/button";
 import { inputCls } from "@/components/ui/field";
@@ -12,8 +13,11 @@ export function TermForm({ kind, label }: { kind: "categories" | "tags"; label: 
   const formRef = React.useRef<HTMLFormElement>(null);
 
   React.useEffect(() => {
-    if (state.ok) formRef.current?.reset();
-  }, [state]);
+    if (state.ok) {
+      formRef.current?.reset();
+      toast.success(`${label.charAt(0).toUpperCase()}${label.slice(1)} added`);
+    }
+  }, [state, label]);
 
   const error = state.fieldErrors?.name ?? state.fieldErrors?.slug ?? state.error;
   const id = `new-${kind}`;

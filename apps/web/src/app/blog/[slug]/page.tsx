@@ -4,7 +4,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { site } from "@/content/site";
-import { getPost } from "@/lib/api";
+import { getAllPublishedPosts, getPost } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 
 type Params = Promise<{ slug: string }>;
@@ -16,7 +16,14 @@ const dateFormat = new Intl.DateTimeFormat("en-IN", {
   timeZone: "UTC",
 });
 
+// Prebuild every published post; new slugs render on demand and are cached too.
 export const revalidate = 60;
+export const dynamicParams = true;
+
+export async function generateStaticParams(): Promise<{ slug: string }[]> {
+  const posts = await getAllPublishedPosts();
+  return posts.map((p) => ({ slug: p.slug }));
+}
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { slug } = await params;
@@ -146,11 +153,10 @@ export default async function BlogPostPage({ params }: { params: Params }) {
           <h2 className="text-2xl md:text-3xl">{t.ctaTitle}</h2>
           <p className="mt-3 max-w-lg leading-relaxed text-muted">{t.ctaBody}</p>
           <Button asChild className="mt-6">
-            <a href={t.ctaButton.href} target="_blank" rel="noopener noreferrer">
+            <Link href={t.ctaButton.href}>
               {t.ctaButton.label}
               <ArrowRight aria-hidden="true" />
-              <span className="sr-only"> {site.a11y.opensInNewTab}</span>
-            </a>
+            </Link>
           </Button>
         </aside>
       </footer>

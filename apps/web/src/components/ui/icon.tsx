@@ -14,6 +14,7 @@ import {
   Phone,
   Presentation,
   Rocket,
+  ShieldCheck,
   Search,
   Sparkles,
   Star,
@@ -53,6 +54,7 @@ const icons: Record<IconKey, LucideIcon> = {
   pen: PenTool,
   code: Code2,
   rocket: Rocket,
+  shield: ShieldCheck,
 };
 
 export function Icon({ name, ...props }: { name: IconKey } & LucideProps) {

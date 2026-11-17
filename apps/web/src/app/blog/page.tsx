@@ -6,6 +6,7 @@ import { getCategories, getPosts } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import { PostGrid } from "@/components/blog/post-grid";
 import { Pagination } from "@/components/blog/pagination";
+import { FeaturedPost } from "@/components/blog/featured-post";
 import { FadeUp } from "@/components/ui/fade-up";
 
 export const metadata: Metadata = {
@@ -56,6 +57,11 @@ export default async function BlogIndexPage({ searchParams }: { searchParams: SP
     const s = params.toString();
     return s ? `/blog?${s}` : "/blog";
   };
+
+  // Page 1 of the unsearched list leads with the newest post as a large card.
+  const showFeatured = page === 1 && !q && result !== null && result.data.length > 0;
+  const featured = showFeatured ? result.data[0] : null;
+  const rest = result ? (showFeatured ? result.data.slice(1) : result.data) : [];
 
   const visibleCategories = (categories ?? []).filter((c) => (c.postCount ?? 0) > 0);
 
@@ -143,7 +149,12 @@ export default async function BlogIndexPage({ searchParams }: { searchParams: SP
           <EmptyState title={t.emptyTitle} body={t.emptyBody} />
         ) : (
           <>
-            <PostGrid posts={result.data} />
+            {featured ? (
+              <FadeUp className="mb-5">
+                <FeaturedPost post={featured} />
+              </FadeUp>
+            ) : null}
+            {rest.length > 0 ? <PostGrid posts={rest} patternOffset={featured ? 1 : 0} /> : null}
             <Pagination
               page={result.meta.page}
               totalPages={result.meta.totalPages}

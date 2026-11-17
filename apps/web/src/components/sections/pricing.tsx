@@ -2,6 +2,7 @@ import { ArrowRight, Check, ShieldCheck } from "lucide-react";
 import { site } from "@/content/site";
 import { Button } from "@/components/ui/button";
 import { FadeUp } from "@/components/ui/fade-up";
+import { Icon } from "@/components/ui/icon";
 import { SectionHeading } from "@/components/ui/section-heading";
 
 export function Pricing() {
@@ -14,12 +15,29 @@ export function Pricing() {
       className="section-y border-y border-border bg-surface"
     >
       <div className="container-page grid grid-cols-1 items-center gap-14 lg:grid-cols-[1fr_1.1fr]">
-        <SectionHeading
-          id="pricing-title"
-          eyebrow={pricing.eyebrow}
-          title={pricing.title}
-          description={pricing.description}
-        />
+        <div>
+          <SectionHeading
+            id="pricing-title"
+            eyebrow={pricing.eyebrow}
+            title={pricing.title}
+            description={pricing.description}
+          />
+          <FadeUp delay={0.05}>
+            <ul className="mt-10 grid gap-5 sm:grid-cols-3 lg:grid-cols-1">
+              {pricing.reassurance.map((item) => (
+                <li key={item.title} className="flex gap-4">
+                  <span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-brand-soft text-brand-ink">
+                    <Icon name={item.icon} className="size-5" />
+                  </span>
+                  <span>
+                    <span className="block font-semibold text-ink">{item.title}</span>
+                    <span className="mt-1 block text-sm leading-relaxed text-muted">{item.description}</span>
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </FadeUp>
+        </div>
 
         <FadeUp>
           <div className="relative rounded-[var(--radius-panel)] border border-border bg-bg p-6 shadow-soft sm:p-8 md:p-10">

@@ -2,10 +2,13 @@
 
 import * as React from "react";
 import { useActionState } from "react";
-import { Check, ExternalLink } from "lucide-react";
+import { ExternalLink } from "lucide-react";
+import { toast } from "sonner";
 import { savePostAction, type FormState } from "@/app/admin/actions";
 import { Button } from "@/components/ui/button";
 import { Field, inputCls, textareaCls } from "@/components/ui/field";
+import { CoverPreview } from "./cover-preview";
+import { FlashToast } from "./flash-toast";
 import { RichTextEditor } from "./rich-text-editor";
 
 export type PostFormValues = {
@@ -45,10 +48,18 @@ export function PostForm({
   tags: Term[];
   created?: boolean;
 }) {
-  const [state, action, pending] = useActionState<FormState, FormData>(savePostAction, {});
+  // Toast from the action itself: a successful save re-keys this form (new updatedAt),
+  // so an effect watching `state` would unmount before it ran.
+  const [state, action, pending] = useActionState<FormState, FormData>(async (prev, formData) => {
+    const result = await savePostAction(prev, formData);
+    if (result.ok) toast.success("Changes saved");
+    else if (result.error) toast.error("Couldn't save the post", { description: result.error });
+    return result;
+  }, {});
   const [status, setStatus] = React.useState(initial.status);
   const [tzOffset, setTzOffset] = React.useState(0);
   const [publishedLocal, setPublishedLocal] = React.useState("");
+  const [cover, setCover] = React.useState(initial.coverImageUrl);
 
   // Timezone-dependent values are only known in the browser.
   React.useEffect(() => {
@@ -71,12 +82,8 @@ export function PostForm({
           <p role="alert" className="rounded-xl border border-brand/40 bg-brand-soft px-4 py-3 text-sm font-medium">
             {state.error}
           </p>
-        ) : state.ok || created ? (
-          <p role="status" className="flex items-center gap-2 rounded-xl bg-brand-soft px-4 py-3 text-sm font-medium">
-            <Check className="size-4 text-brand-ink" aria-hidden="true" />
-            {created && !state.ok ? "Post created." : "Changes saved."}
-          </p>
         ) : null}
+        {created ? <FlashToast param="created" message="Post created" /> : null}
 
         <Field label="Title" htmlFor="title" error={err("title")}>
           <input
@@ -195,11 +202,13 @@ export function PostForm({
               name="coverImageUrl"
               type="url"
               placeholder="https://…"
-              defaultValue={initial.coverImageUrl}
+              value={cover}
+              onChange={(e) => setCover(e.target.value)}
               aria-invalid={Boolean(err("coverImageUrl"))}
               className={inputCls}
             />
           </Field>
+          <CoverPreview url={cover.trim()} />
         </div>
 
         <TermPicker legend="Categories" name="categoryIds" terms={categories} selected={initial.categoryIds} />
