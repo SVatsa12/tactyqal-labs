@@ -1,20 +1,24 @@
 import type { Metadata, Viewport } from "next";
-import { Bricolage_Grotesque, Geist } from "next/font/google";
+import localFont from "next/font/local";
 import { site } from "@/content/site";
 import { Toaster } from "@/components/ui/toaster";
 import { FadeUpObserver } from "@/components/ui/fade-up-observer";
 import "./globals.css";
 import { SITE_URL } from "@/lib/urls";
 
-const bricolage = Bricolage_Grotesque({
-  subsets: ["latin"],
-  weight: ["600", "700"],
+// Self-hosted with next/font/local from npm packages (pinned in the lockfile), so builds never
+// fetch from Google Fonts: a bad Google Fonts response once failed the Vercel build.
+// Both are variable fonts (OFL-1.1); next/font still preloads them and generates size-adjusted fallbacks.
+const bricolage = localFont({
+  src: "../../node_modules/@fontsource-variable/bricolage-grotesque/files/bricolage-grotesque-latin-wght-normal.woff2",
+  weight: "200 800",
   variable: "--font-bricolage",
   display: "swap",
 });
 
-const geist = Geist({
-  subsets: ["latin"],
+const geist = localFont({
+  src: "../../node_modules/geist/dist/fonts/geist-sans/Geist-Variable.woff2",
+  weight: "100 900",
   variable: "--font-geist",
   display: "swap",
 });
