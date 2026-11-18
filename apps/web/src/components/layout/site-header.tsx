@@ -61,10 +61,13 @@ export function SiteHeader() {
   const ids = React.useMemo(() => nav.links.map((l) => sectionIdOf(l.href)), [nav.links]);
   const activeSection = useActiveSection(ids, isHome);
 
-  const isActive = (href: string) =>
-    href === "/blog"
-      ? pathname.startsWith("/blog") || activeSection === "blog"
-      : isHome && activeSection === sectionIdOf(href);
+  const isActive = (href: string) => {
+    const id = sectionIdOf(href);
+    if (id === "blog") {
+      return pathname.startsWith("/blog") || (isHome && activeSection === "blog");
+    }
+    return isHome && activeSection === id;
+  };
 
   // In the sheet, same-page section links scroll after the sheet has closed and released its scroll lock.
   const onSheetLinkClick = (event: React.MouseEvent<HTMLAnchorElement>, href: string) => {

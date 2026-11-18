@@ -122,7 +122,7 @@ export const site = {
       { label: "Program", href: "/#program" },
       { label: "Why us", href: "/#why" },
       { label: "Tools", href: "/#tools" },
-      { label: "Blog", href: "/blog" },
+      { label: "Blog", href: "/#blog" },
       { label: "Pricing", href: "/#pricing" },
       { label: "FAQ", href: "/#faq" },
       { label: "Contact", href: "/#contact" },
