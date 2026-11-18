@@ -51,7 +51,7 @@ export function SiteFooter() {
               ·
             </span>
             <Link
-              href="/admin"
+              href="/admin/login"
               aria-label="Admin sign in"
               className="inline-flex items-center gap-1.5 text-sm text-muted transition-colors hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink/20 focus-visible:ring-offset-2 rounded"
             >

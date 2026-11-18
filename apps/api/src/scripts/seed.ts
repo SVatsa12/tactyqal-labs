@@ -70,7 +70,7 @@ async function main() {
   const name = process.env.ADMIN_NAME?.trim() || "Admin";
 
   if (!email || !password) throw new Error("Set ADMIN_EMAIL and ADMIN_PASSWORD in apps/api/.env");
-  if (password.length < 10) throw new Error("ADMIN_PASSWORD must be at least 10 characters");
+  if (password.length < 6) throw new Error("ADMIN_PASSWORD must be at least 6 characters");
 
   const passwordHash = await bcrypt.hash(password, 12);
   const user = await prisma.user.upsert({
