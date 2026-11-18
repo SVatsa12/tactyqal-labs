@@ -6,7 +6,12 @@ const envSchema = z.object({
   DATABASE_URL: z
     .string()
     .min(1, "DATABASE_URL is required")
-    .transform((v) => v.trim().replace(/^["']+|["']+$/g, "").trim()),
+    .transform((v) =>
+      v
+        .trim()
+        .replace(/^["']+|["']+$/g, "")
+        .trim(),
+    ),
   CORS_ORIGINS: z
     .string()
     .default("http://localhost:3000")

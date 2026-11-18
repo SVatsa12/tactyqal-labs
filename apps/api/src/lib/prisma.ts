@@ -9,7 +9,10 @@ import { PrismaClient } from "@prisma/client";
  */
 export function sanitizeDatabaseUrl(raw?: string, seconds = 15): string {
   if (!raw) return "";
-  let str = raw.trim().replace(/^["']+|["']+$/g, "").trim();
+  let str = raw
+    .trim()
+    .replace(/^["']+|["']+$/g, "")
+    .trim();
   try {
     const parsed = new URL(str);
     if (!parsed.searchParams.has("connect_timeout")) {
@@ -35,7 +38,10 @@ export function sanitizeDatabaseUrl(raw?: string, seconds = 15): string {
  */
 export function maskDatabaseUrl(raw?: string): string {
   if (!raw) return "[empty]";
-  const str = raw.trim().replace(/^["']+|["']+$/g, "").trim();
+  const str = raw
+    .trim()
+    .replace(/^["']+|["']+$/g, "")
+    .trim();
   try {
     const parsed = new URL(str);
     if (parsed.password) {
@@ -113,4 +119,3 @@ export async function withDbRetry<T>(
 
 /** Cheapest possible round trip to the database. */
 export const pingDb = () => prisma.$queryRaw`SELECT 1`;
-

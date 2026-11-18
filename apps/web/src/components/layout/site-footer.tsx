@@ -1,4 +1,5 @@
-import { ArrowUp } from "lucide-react";
+import Link from "next/link";
+import { ArrowUp, Lock } from "lucide-react";
 import { site } from "@/content/site";
 import { isExternal } from "@/lib/utils";
 import { Logo } from "./logo";
@@ -42,12 +43,25 @@ export function SiteFooter() {
 
       <div className="border-t border-border">
         <div className="container-page flex flex-col items-start justify-between gap-4 py-6 text-sm text-muted sm:flex-row sm:items-center">
-          <p>
-            © {year} {footer.copyright}
-          </p>
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+            <p>
+              © {year} {footer.copyright}
+            </p>
+            <span className="text-border" aria-hidden="true">
+              ·
+            </span>
+            <Link
+              href="/admin"
+              aria-label="Admin sign in"
+              className="inline-flex items-center gap-1.5 text-sm text-muted transition-colors hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink/20 focus-visible:ring-offset-2 rounded"
+            >
+              <Lock className="size-3.5" aria-hidden="true" />
+              <span>Admin</span>
+            </Link>
+          </div>
           <a
             href={footer.backToTop.href}
-            className="inline-flex items-center gap-1.5 font-medium transition-colors hover:text-ink"
+            className="inline-flex items-center gap-1.5 font-medium transition-colors hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink/20 focus-visible:ring-offset-2 rounded"
           >
             {footer.backToTop.label}
             <ArrowUp className="size-4" aria-hidden="true" />
