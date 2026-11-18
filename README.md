@@ -8,9 +8,9 @@
 
 | Resource | URL | Notes / Credentials |
 | --- | --- | --- |
-| **Website** | [tactyqal-labs.vercel.app](https://tactyqal-labs.vercel.app) | Production marketing homepage |
-| **Blog** | [tactyqal-labs.vercel.app/blog](https://tactyqal-labs.vercel.app/blog) | Public blog with ISR & category filtering |
-| **Admin Panel** | [tactyqal-labs.vercel.app/admin](https://tactyqal-labs.vercel.app/admin) | Demo credentials: read from env (`ADMIN_EMAIL` / `ADMIN_PASSWORD`) |
+| **Website** | [tactyqal-web.vercel.app](https://tactyqal-web.vercel.app) | Production marketing homepage |
+| **Blog** | [tactyqal-web.vercel.app/blog](https://tactyqal-web.vercel.app/blog) | Public blog with ISR & category filtering |
+| **Admin Panel** | [tactyqal-web.vercel.app/admin](https://tactyqal-web.vercel.app/admin) | Demo credentials: read from env (`ADMIN_EMAIL` / `ADMIN_PASSWORD`) |
 | **API Docs (Swagger)** | [tactyqal-api.vercel.app/api/docs](https://tactyqal-api.vercel.app/api/docs) | Interactive OpenAPI 3.0 / Swagger UI |
 | **Video Walkthrough** | [Watch Walkthrough (Loom / YouTube)](#) | Placeholder (90-second product demo) |
 
