@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import request from "supertest";
 import { createApp } from "../app.js";
-import { prisma } from "../lib/prisma.js";
+import { prisma, withDbRetry } from "../lib/prisma.js";
 import { signToken } from "../middleware/auth.js";
 
 /** False when TEST_DATABASE_URL is missing: suites use describe.skipIf(!hasTestDb). */
@@ -21,12 +21,20 @@ const TABLES = ["Lead", "Post", "Category", "Tag", "User"] as const;
  */
 export async function resetDb(): Promise<void> {
   const url = process.env.DATABASE_URL;
-  if (!hasTestDb || !url || url !== process.env.TEST_DATABASE_URL) {
+  const testUrl = process.env.TEST_DATABASE_URL;
+  if (!hasTestDb || !url || !testUrl) {
+    throw new Error("resetDb() only runs against TEST_DATABASE_URL");
+  }
+  const strip = (s: string) => s.replace(/[?&]connect_timeout=\d+/, "");
+  if (strip(url) !== strip(testUrl)) {
     throw new Error("resetDb() only runs against TEST_DATABASE_URL");
   }
   const schema = new URL(url).searchParams.get("schema") ?? "public";
   if (!/^\w+$/.test(schema)) throw new Error(`Unexpected schema name: ${schema}`);
-  await prisma.$executeRawUnsafe(`TRUNCATE TABLE ${TABLES.map((t) => `"${schema}"."${t}"`).join(", ")} CASCADE`);
+  await withDbRetry(
+    () => prisma.$executeRawUnsafe(`TRUNCATE TABLE ${TABLES.map((t) => `"${schema}"."${t}"`).join(", ")} CASCADE`),
+    { attempts: 4, delayMs: 1500 },
+  );
 }
 
 /** Creates the admin user and returns a signed token (no login request, so no login rate limit). */

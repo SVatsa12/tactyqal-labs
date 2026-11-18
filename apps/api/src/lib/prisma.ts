@@ -1,18 +1,90 @@
 import { PrismaClient } from "@prisma/client";
 
 /**
- * Neon computes scale to zero and can take several seconds to wake up. Prisma's default
- * connect_timeout is 5s, so a cold start fails the first query. Use 15s unless the URL already
- * sets one (documented in .env.example: append `&connect_timeout=15` to DATABASE_URL).
+ * Sanitizes a database connection string:
+ * - Trims whitespace and newlines
+ * - Strips surrounding quotes (single or double)
+ * - Ensures connect_timeout is present (defaults to 15s for Neon scale-to-zero)
+ * - Ensures sslmode=require for Neon domains
  */
-export function withConnectTimeout(url: string, seconds = 15): string {
-  if (/[?&]connect_timeout=/.test(url)) return url;
-  return `${url}${url.includes("?") ? "&" : "?"}connect_timeout=${seconds}`;
+export function sanitizeDatabaseUrl(raw?: string, seconds = 15): string {
+  if (!raw) return "";
+  let str = raw.trim().replace(/^["']+|["']+$/g, "").trim();
+  try {
+    const parsed = new URL(str);
+    if (!parsed.searchParams.has("connect_timeout")) {
+      parsed.searchParams.set("connect_timeout", String(seconds));
+    }
+    if (!parsed.searchParams.has("sslmode") && parsed.hostname.includes("neon.tech")) {
+      parsed.searchParams.set("sslmode", "require");
+    }
+    return parsed.toString();
+  } catch {
+    if (!/[?&]connect_timeout=/.test(str)) {
+      str = `${str}${str.includes("?") ? "&" : "?"}connect_timeout=${seconds}`;
+    }
+    if (!/[?&]sslmode=/.test(str) && str.includes("neon.tech")) {
+      str = `${str}&sslmode=require`;
+    }
+    return str;
+  }
 }
 
-const url = process.env.DATABASE_URL;
+/**
+ * Masks credentials in a database URL so it can be logged safely.
+ */
+export function maskDatabaseUrl(raw?: string): string {
+  if (!raw) return "[empty]";
+  const str = raw.trim().replace(/^["']+|["']+$/g, "").trim();
+  try {
+    const parsed = new URL(str);
+    if (parsed.password) {
+      parsed.password = "****";
+    }
+    return parsed.toString();
+  } catch {
+    return str.replace(/:\/\/([^:]+):([^@]+)@/, "://$1:****@");
+  }
+}
 
-export const prisma = new PrismaClient(url ? { datasourceUrl: withConnectTimeout(url) } : undefined);
+/**
+ * Strips password credentials from any error message string.
+ */
+export function maskErrorMessage(msg: string): string {
+  if (!msg) return "";
+  return msg.replace(/:\/\/([^:]+):([^@\s"']+)@/g, "://$1:****@");
+}
+
+/**
+ * Formats a Prisma error to extract code, name, and masked message.
+ */
+export function formatPrismaError(err: unknown): { code: string; name: string; message: string } {
+  if (!err) {
+    return { code: "UNKNOWN", name: "UnknownError", message: "Unknown error" };
+  }
+  if (typeof err === "object" && err !== null) {
+    const e = err as Record<string, any>;
+    const code = e.code || e.errorCode || "NO_CODE";
+    const name = e.name || "Error";
+    const rawMsg = typeof e.message === "string" ? e.message : String(err);
+    return { code: String(code), name: String(name), message: maskErrorMessage(rawMsg) };
+  }
+  return { code: "PRIMITIVE", name: "Error", message: maskErrorMessage(String(err)) };
+}
+
+export function withConnectTimeout(url: string, seconds = 15): string {
+  return sanitizeDatabaseUrl(url, seconds);
+}
+
+const rawUrl = process.env.DATABASE_URL;
+const cleanedUrl = sanitizeDatabaseUrl(rawUrl, 15);
+
+// Sync sanitized URL back to process.env so internal schema resolution matches
+if (cleanedUrl) {
+  process.env.DATABASE_URL = cleanedUrl;
+}
+
+export const prisma = new PrismaClient(cleanedUrl ? { datasourceUrl: cleanedUrl } : undefined);
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -41,3 +113,4 @@ export async function withDbRetry<T>(
 
 /** Cheapest possible round trip to the database. */
 export const pingDb = () => prisma.$queryRaw`SELECT 1`;
+

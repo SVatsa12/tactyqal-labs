@@ -11,7 +11,7 @@
 | **Website** | [tactyqal-web.vercel.app](https://tactyqal-web.vercel.app) | Production marketing homepage |
 | **Blog** | [tactyqal-web.vercel.app/blog](https://tactyqal-web.vercel.app/blog) | Public blog with ISR & category filtering |
 | **Admin Panel** | [tactyqal-web.vercel.app/admin](https://tactyqal-web.vercel.app/admin) | Demo credentials: read from env (`ADMIN_EMAIL` / `ADMIN_PASSWORD`) |
-| **API Docs (Swagger)** | [tactyqal-api.vercel.app/api/docs](https://tactyqal-api.vercel.app/api/docs) | Interactive OpenAPI 3.0 / Swagger UI |
+| **API Docs (Swagger)** | [tactyqal-labs-phi.vercel.app/api/docs](https://tactyqal-labs-phi.vercel.app/api/docs) | Interactive OpenAPI 3.0 / Swagger UI |
 | **Video Walkthrough** | [Watch Walkthrough (Loom / YouTube)](#) | Placeholder (90-second product demo) |
 
 ---

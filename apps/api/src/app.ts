@@ -7,7 +7,7 @@ import { env, isProd, isTest } from "./lib/env.js";
 import { HttpError } from "./lib/errors.js";
 import { docsCsp, docsInitScript, docsPage } from "./lib/docs-page.js";
 import { openApiSpec } from "./lib/openapi.js";
-import { pingDb, withDbRetry } from "./lib/prisma.js";
+import { formatPrismaError, maskDatabaseUrl, pingDb, withDbRetry } from "./lib/prisma.js";
 import { errorHandler, notFoundHandler } from "./middleware/error-handler.js";
 import { authRouter } from "./routes/auth.js";
 import { leadsRouter } from "./routes/leads.js";
@@ -65,9 +65,26 @@ export function createApp() {
   // Still down -> 503, and the platform health check simply polls again.
   v1.get("/health", async (_req, res) => {
     try {
-      await withDbRetry(pingDb, { attempts: 2, delayMs: 1500 });
-    } catch {
-      throw new HttpError("SERVICE_UNAVAILABLE", "Database is not reachable yet, try again shortly");
+      await withDbRetry(pingDb, {
+        attempts: 2,
+        delayMs: 1500,
+        onRetry: (attempt, err) => {
+          const formatted = formatPrismaError(err);
+          console.warn(
+            `[HealthCheck] Database retry ${attempt}: [${formatted.name}] code=${formatted.code} - ${formatted.message}`,
+          );
+        },
+      });
+    } catch (err) {
+      const formatted = formatPrismaError(err);
+      const maskedUrl = maskDatabaseUrl(process.env.DATABASE_URL);
+      console.error(
+        `[HealthCheck] Database connection failed: [${formatted.name}] code=${formatted.code} - ${formatted.message} (Target: ${maskedUrl})`,
+      );
+      throw new HttpError("SERVICE_UNAVAILABLE", "Database is not reachable yet, try again shortly", {
+        prismaCode: formatted.code,
+        errorType: formatted.name,
+      });
     }
     res.json({ data: { status: "ok" } });
   });
